@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <title>알고리즘 테스트</title>
+</head>
+
+<body>
+    <p id="title">운양의 소리</p>
+    <div class="cladding" id="lunch">
+        <div class="box" id="lunch_menu">
+            <h1 class="boxTitle">점심 메뉴</h1>
+            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
+            <p class="text">{{ lunch }}</p>
+        </div>
+        <div class="box" id="lunch_nutrition_graph">
+            <h1 class="boxTitle">영양 정보</h1>
+            <img title="img" src="{{ url_for('static', filename='image.jpg') }}">
+        </div>
+    </div><br>
+    
+    <div class="cladding" id="timetable">
+        <div class="box" id="lunch_menu">
+            <h1 class="boxTitle">점심 메뉴</h1>
+            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
+            <p class="text">{{ lunch }}</p>
+        </div>
+        <div class="box" id="lunch_nutrition_graph">
+            <h1 class="boxTitle">영양 정보</h1>
+            <img title="img" src="{{ url_for('static', filename='image.jpg') }}">
+        </div>
+    </div><br>
+    
+    <div class="cladding" id="weather">
+        <div class="box" id="lunch_menu">
+            <h1 class="boxTitle">점심 메뉴</h1>
+            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
+            <p class="text">{{ lunch }}</p>
+        </div>
+        <div class="box" id="lunch_nutrition_graph">
+            <h1 class="boxTitle">영양 정보</h1>
+            <img title="img" src="{{ url_for('static', filename='image.jpg') }}">
+        </div>
+    </div>
+</body>
+
+</html>
