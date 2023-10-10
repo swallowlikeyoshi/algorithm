@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
-    <title>알고리즘 테스트</title>
+    <title>오늘의 운양고</title>
 </head>
 
 <body>
-    <p id="title">운양의 소리</p>
+    <p id="title">오늘의 운양고</p>
     <div class="cladding" id="lunch">
         <div class="box" id="lunch_menu">
             <h1 class="boxTitle">점심 메뉴</h1>
@@ -26,22 +26,22 @@
     
     <div class="cladding" id="timetable">
         <div class="box" id="lunch_menu">
-            <h1 class="boxTitle">점심 메뉴</h1>
+            <h1 class="boxTitle">오늘의 시간표</h1>
             <p class="text">{{ lunch|safe }}</p>
         </div>
         <div class="box" id="lunch_nutrition_graph">
-            <h1 class="boxTitle">영양 정보</h1>
+            <h1 class="boxTitle"></h1>
             <img title="img" src="{{ url_for('static', filename='image.jpg') }}">
         </div>
     </div><br>
     
     <div class="cladding" id="weather">
         <div class="box" id="lunch_menu">
-            <h1 class="boxTitle">점심 메뉴</h1>
+            <h1 class="boxTitle">오늘 날씨</h1>
             <p class="text">{{ lunch|safe }}</p>
         </div>
         <div class="box" id="lunch_nutrition_graph">
-            <h1 class="boxTitle">영양 정보</h1>
+            <h1 class="boxTitle">날씨 이미지</h1>
             <img title="img" src="{{ url_for('static', filename='image.jpg') }}">
         </div>
     </div>
