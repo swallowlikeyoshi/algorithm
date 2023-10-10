@@ -18,6 +18,4 @@ def getLunch(today):
     response = requests.get(url, params=parameters)
     response_json = json.loads(response.text)
     lunch_menu = str(response_json['mealServiceDietInfo'][1]['row'][0]['DDISH_NM'])
-    lunch_menu = lunch_menu.replace('<br/>', '\n')
-    lunch_menu = lunch_menu.replace('\n', '<br>')
     return lunch_menu
