@@ -6,7 +6,7 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route('/')
 def index():
-    return render_template('index.html', lunch = getLunch(20230913))
+    return render_template('index.html', lunch = getLunch(20231010))
 
 @app.route('/getlunch')
 def lunch(today):
