@@ -16,8 +16,7 @@
     <div class="cladding" id="lunch">
         <div class="box" id="lunch_menu">
             <h1 class="boxTitle">점심 메뉴</h1>
-            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
-            <p class="text">{{ lunch|safe }}</p>
+            <p class="text">{{ lunch|safe }}</p> <!-- Jinja 매개변수 칸에 |safe 를 추가하면 매개변수 내 HTML 태그들이 작동함(<br> 등...)-->
         </div>
         <div class="box" id="lunch_nutrition_graph">
             <h1 class="boxTitle">영양 정보</h1>
@@ -28,8 +27,7 @@
     <div class="cladding" id="timetable">
         <div class="box" id="lunch_menu">
             <h1 class="boxTitle">점심 메뉴</h1>
-            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
-            <p class="text">{{ lunch }}</p>
+            <p class="text">{{ lunch|safe }}</p>
         </div>
         <div class="box" id="lunch_nutrition_graph">
             <h1 class="boxTitle">영양 정보</h1>
@@ -40,8 +38,7 @@
     <div class="cladding" id="weather">
         <div class="box" id="lunch_menu">
             <h1 class="boxTitle">점심 메뉴</h1>
-            <!-- <p hx-get="/getlunch" hx-swap="outerHTML" hx-trigger="load" class="text">오늘의 식단</p> -->
-            <p class="text">{{ lunch }}</p>
+            <p class="text">{{ lunch|safe }}</p>
         </div>
         <div class="box" id="lunch_nutrition_graph">
             <h1 class="boxTitle">영양 정보</h1>
