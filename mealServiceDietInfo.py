@@ -1,6 +1,6 @@
 from sensitiveInformations import *
 
-def getLunch(today):
+def getDietInfo(today):
     import requests, json
 
     schul_dept_code = 'J10'
