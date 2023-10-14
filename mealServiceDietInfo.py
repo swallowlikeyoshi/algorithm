@@ -16,7 +16,5 @@ def getDietInfo(today):
     }
     response = requests.get(url, params=parameters)
     response_json = json.loads(response.text)
-    print(response_json)
-    print()
     lunch_menu = str(response_json['mealServiceDietInfo'][1]['row'][0]['DDISH_NM'])
     return lunch_menu
