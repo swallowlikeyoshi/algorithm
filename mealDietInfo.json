@@ -1,6 +1,38 @@
 {
-	"RESULT": {
-		"CODE": "INFO-200",
-		"MESSAGE": "\ud574\ub2f9\ud558\ub294 \ub370\uc774\ud130\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
-	}
+	"mealServiceDietInfo": [
+		{
+			"head": [
+				{
+					"list_total_count": 1
+				},
+				{
+					"RESULT": {
+						"CODE": "INFO-000",
+						"MESSAGE": "\uc815\uc0c1 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+					}
+				}
+			]
+		},
+		{
+			"row": [
+				{
+					"ATPT_OFCDC_SC_CODE": "J10",
+					"ATPT_OFCDC_SC_NM": "\uacbd\uae30\ub3c4\uad50\uc721\uccad",
+					"SD_SCHUL_CODE": "7531103",
+					"SCHUL_NM": "\uc6b4\uc591\uace0\ub4f1\ud559\uad50",
+					"MMEAL_SC_CODE": "2",
+					"MMEAL_SC_NM": "\uc911\uc2dd",
+					"MLSV_YMD": "20231019",
+					"MLSV_FGR": 1000.0,
+					"DDISH_NM": "\uae40\uac00\ub8e8\uae68\ubc25 (1.2.5.6.9.13.16.18)<br/>\uc5f4\ub300\uacfc\uc77c\uc0d0\ub7ec\ub4dc (12.13)<br/>\uba54\ucd94\ub9ac\uc54c\ub5a1\ubcf6\uc774(\ubc25\uce78) (1.2.5.6.10.13.15.16)<br/>\ud56b\ub3c4\uadf8&\ucf00\ucc39 (1.2.5.6.10.12.13.16)<br/>\ub2e8\ubb34\uc9c0 <br/>\ucfe8\ud53c\uc2a4 (2)",
+					"ORPLC_INFO": "\uc1e0\uace0\uae30(\uc885\ub958) : <br/>\uc1e0\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : <br/>\ub3fc\uc9c0\uace0\uae30 : <br/>\ub3fc\uc9c0\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\ub2ed\uace0\uae30 : <br/>\ub2ed\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : <br/>\uc624\ub9ac\uace0\uae30 : <br/>\uc624\ub9ac\uace0\uae30 \uac00\uacf5\ud488 : <br/>\uc300 : \uad6d\ub0b4\uc0b0<br/>\ubc30\ucd94 : \uad6d\ub0b4\uc0b0<br/>\uace0\ucda7\uac00\ub8e8 : \uad6d\ub0b4\uc0b0<br/>\ucf69 : \uad6d\ub0b4\uc0b0<br/>\ub099\uc9c0 : <br/>\uace0\ub4f1\uc5b4 : <br/>\uac08\uce58 : <br/>\uc624\uc9d5\uc5b4 : <br/>\uaf43\uac8c : <br/>\ucc38\uc870\uae30 : <br/>\ube44\uace0 : ",
+					"CAL_INFO": "639.2 Kcal",
+					"NTR_INFO": "\ud0c4\uc218\ud654\ubb3c(g) : 113.4<br/>\ub2e8\ubc31\uc9c8(g) : 17.2<br/>\uc9c0\ubc29(g) : 14.4<br/>\ube44\ud0c0\ubbfcA(R.E) : 135.5<br/>\ud2f0\uc544\ubbfc(mg) : 0.2<br/>\ub9ac\ubcf4\ud50c\ub77c\ube48(mg) : 0.3<br/>\ube44\ud0c0\ubbfcC(mg) : 42.2<br/>\uce7c\uc298(mg) : 410.2<br/>\ucca0\ubd84(mg) : 1.9",
+					"MLSV_FROM_YMD": "20231019",
+					"MLSV_TO_YMD": "20231019",
+					"LOAD_DTM": "20231020"
+				}
+			]
+		}
+	]
 }

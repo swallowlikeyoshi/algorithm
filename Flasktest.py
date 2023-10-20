@@ -7,12 +7,10 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route('/')
 def index():
-    return render_template('index.html', lunch = getMealDietInfoToday())
+    return render_template('index.html', dietInfo = meal.getDietInfo(today()), calrorieInfo = meal.getCalorieInfo(today()))
 
-@app.route('/getlunch')
-def getMealDietInfoToday():
-    today = str(datetime.date(datetime.today())).replace('-', '')
-    return meal.getDietInfo(today)
+def today():
+    return str(datetime.date(datetime.today())).replace('-', '')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
