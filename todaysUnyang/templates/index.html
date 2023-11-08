@@ -1,43 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container px-4 px-lg-5">
-    <!-- Heading Row-->
     <div class="row gx-4 gx-lg-5 align-items-center my-5">
         <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="{{ url_for('static', filename='image.jpg') }}" alt="beluga" /></div>
         <div class="col-lg-5">
             <h1 class="font-weight-light">환영합니다!</h1>
             <p>본 사이트는 2023 알고리즘 동아리에서 제작되었습니다.</p>
-            <a class="btn btn-primary" href="#!">제작자 보러가기</a>
+            <a class="btn btn-primary" href="{{ url_for('developers')}}">제작자 보러가기</a>
         </div>
     </div>
 </div>
-    <!-- Content Row-->
-<div class="row gx-4 gx-lg-5">
-    <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <h2 class="card-title">오늘의 급식 메뉴</h2>
-                <p class="card-text text-center">{{ dietInfo | safe }}</p>
+<div class="container align-items-center">
+    <div class="row gx-4 gx-lg-5">
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 급식 메뉴</h2>
+                    <p class="card-text text-center">{{ dietInfo | safe }}</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
         </div>
-    </div>
-    <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <h2 class="card-title">오늘의 날씨</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 날씨</h2>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
         </div>
-    </div>
-    <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <h2 class="card-title">오늘의 학사일정</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 학사일정</h2>
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>
-            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
         </div>
     </div>
 </div>
