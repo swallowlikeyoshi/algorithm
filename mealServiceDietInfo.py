@@ -32,12 +32,14 @@ def getNutritionInfo(today):
     except:
         return str(dietInfo['RESULT']['MESSAGE'])
 
-def _getMealServiceDietInfo(date):
+def _getMealServiceDietInfo(today):
     with open('mealDietInfo.json', 'r', encoding='utf-8') as f:
         savedDietInfo = json.load(f)
     try:
-        if (str(savedDietInfo['mealServiceDietInfo'][1]['row'][0]['MLSV_YMD']) == str(date)):
+        if (str(savedDietInfo['mealServiceDietInfo'][1]['row'][0]['MLSV_YMD']) == str(today)):
             return savedDietInfo
+        else:
+            raise
     except:
         url = 'https://open.neis.go.kr/hub/mealServiceDietInfo' #사이트에 기재된 API 요청 주소
         parameters = {
@@ -45,8 +47,8 @@ def _getMealServiceDietInfo(date):
             'Type' : 'json',                                    #받아올 데이터의 자료 구조
             'ATPT_OFCDC_SC_CODE' : SCHUL_DEPT_CODE,         
             'SD_SCHUL_CODE' : SCHUL_CODE,                       #각각에 대한 설명은 API 사이트에 설명되어 있다.
-            'MLSV_FROM_YMD' : date,
-            'MLSV_TO_YMD' : date
+            'MLSV_FROM_YMD' : today,
+            'MLSV_TO_YMD' : today
         }
         requestsResponseData = requests.get(url, params=parameters)
         newDietInfo = json.loads(requestsResponseData.text)

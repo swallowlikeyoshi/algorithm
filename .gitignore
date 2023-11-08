@@ -1,1 +1,7 @@
 sensitiveInformations.py
+
+*.json
+
+__pycache__
+
+.*
