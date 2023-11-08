@@ -5,7 +5,7 @@ from todaysUnyang import mealServiceDietInfo as meal
 
 @app.route('/')
 def index():
-    return render_template('index.html', dietInfo = meal.getDietInfo(today()), calrorieInfo = meal.getCalorieInfo(today()))
+    return render_template('index.html', dietInfo = meal.getDietInfo(today()))
 
 @app.route('/developers')
 def developers():
