@@ -10,29 +10,8 @@ def getDietInfo(today):
         return str(dietInfo['mealServiceDietInfo'][1]['row'][0]['DDISH_NM']) 
     except:
         return str(dietInfo['RESULT']['MESSAGE'])
-    
-def getCalorieInfo(today):
-    dietInfo = _getMealServiceDietInfo(today)
-    try:
-        return str(dietInfo['mealServiceDietInfo'][1]['row'][0]['CAL_INFO'])
-    except:
-        return str(dietInfo['RESULT']['MESSAGE'])
-    
-def getOriginInfo(today):
-    dietInfo = _getMealServiceDietInfo(today)
-    try:
-        return str(dietInfo['mealServiceDietInfo'][1]['row'][0]['OPRLC_INFO'])
-    except:
-        return str(dietInfo['RESULT']['MESSAGE'])
-    
-def getNutritionInfo(today):
-    dietInfo = _getMealServiceDietInfo(today)
-    try:
-        return str(dietInfo['mealServiceDietInfo'][1]['row'][0]['OPRLC_INFO'])
-    except:
-        return str(dietInfo['RESULT']['MESSAGE'])
 
-def _getMealServiceDietInfo(today):
+def _getMealServiceDietInfo(today): #함수명 앞 '_'는 내부 함수임을 뜻함.
     with open('todaysUnyang/mealDietInfo.json', 'r', encoding='utf-8') as f:
         savedDietInfo = json.load(f)
     try:
