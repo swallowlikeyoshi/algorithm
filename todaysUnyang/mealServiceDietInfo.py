@@ -12,9 +12,10 @@ def getDietInfo(today):
         return str(dietInfo['RESULT']['MESSAGE'])
 
 def _getMealServiceDietInfo(today): #함수명 앞 '_'는 내부 함수임을 뜻함.
-    with open('todaysUnyang/mealDietInfo.json', 'r', encoding='utf-8') as f:
-        savedDietInfo = json.load(f)
     try:
+        with open('todaysUnyang/mealDietInfo.json', 'r', encoding='utf-8') as f:
+            savedDietInfo = json.load(f)
+
         if (str(savedDietInfo['mealServiceDietInfo'][1]['row'][0]['MLSV_YMD']) == str(today)):
             return savedDietInfo
         else:

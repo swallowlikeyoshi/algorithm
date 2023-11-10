@@ -33,8 +33,18 @@
         <div class="col-md-4 mb-5">
             <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="card-title">오늘의 학사일정</h2>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                    <h2 class="card-title">오늘의 시간표</h2>
+                    <div class="text-center">
+                        <p class="card-text" id="timeTable">시간표</p>
+                        <div class="containber row">
+                            <form hx-post="/_timetable" hx-trigger="submit" hx-target="#timeTable">
+                                학년: <input type="text" name="grade"><br>
+                                반: <input type="text" name="class"><br>
+                                학기: <input type="text" name="semester"><br>
+                                <button type="submit">불러오기</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>
