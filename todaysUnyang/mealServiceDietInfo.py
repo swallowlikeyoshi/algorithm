@@ -1,6 +1,6 @@
 import requests, json
-from todaysUnyang import env
 
+DIET_INFO_API_KEY = 'b72c971c69c14bfe87cecb165d696fbf' # API 키
 SCHUL_DEPT_CODE = 'J10' #경기도교육청 코드
 SCHUL_CODE = 7531103 #운양고등학교 코드
 
