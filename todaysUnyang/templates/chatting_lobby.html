@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>오늘의 운양고</h1>
+<br>
+<!-- 서버 아이피 확정 시 수정되어야 함 -->
+<form action="http://localhost/chat/" method="POST">
+    <p>이름 <input type="text" name="name" /></p>
+    <p><input type="submit" value="들어가기" /></p>
+</form>
+{% endblock %}

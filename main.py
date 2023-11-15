@@ -1,3 +1,5 @@
-from todaysUnyang import app
+from todaysUnyang import create_app
 
-app.run(debug=True, host='0.0.0.0', port=80)
+todaysUnyang = create_app()
+
+todaysUnyang.run(debug = True, host = '0.0.0.0', port = 80)

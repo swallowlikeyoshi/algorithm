@@ -6,7 +6,7 @@
         <div class="col-lg-5">
             <h1 class="font-weight-light">환영합니다!</h1>
             <p>본 사이트는 2023 알고리즘 동아리에서 제작되었습니다.</p>
-            <a class="btn btn-primary" href="{{ url_for('developers')}}">제작자 보러가기</a>
+            <a class="btn btn-primary" href="{{ url_for('todaysUnyang.developers')}}">제작자 보러가기</a>
         </div>
     </div>
 </div>
@@ -16,7 +16,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h2 class="card-title">오늘의 급식 메뉴</h2>
-                    <p class="card-text text-center">{{ dietInfo | safe }}</p>
+                    <p class="card-text text-center">{{ diet_info | safe }}</p>
                 </div>
                 <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>
@@ -25,7 +25,7 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h2 class="card-title">오늘의 날씨</h2>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
+                    <p class="card-text">{{ weather_info | safe }}</p>
                 </div>
                 <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
             </div>

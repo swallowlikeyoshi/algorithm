@@ -1,19 +1,21 @@
 import requests, json
+from todaysUnyang import BASE_DIR
 
 DIET_INFO_API_KEY = 'b72c971c69c14bfe87cecb165d696fbf' # API 키
 SCHUL_DEPT_CODE = 'J10' #경기도교육청 코드
 SCHUL_CODE = 7531103 #운양고등학교 코드
 
-def getDietInfo(today):
-    dietInfo = _getMealServiceDietInfo(today)
+def get_diet_info(today):
+    dietInfo = _get_data(today)
     try:
         return str(dietInfo['mealServiceDietInfo'][1]['row'][0]['DDISH_NM']) 
     except:
         return str(dietInfo['RESULT']['MESSAGE'])
 
-def _getMealServiceDietInfo(today): #함수명 앞 '_'는 내부 함수임을 뜻함.
+def _get_data(today): #함수명 앞 '_'는 내부 함수임을 뜻함.
     try:
-        with open('todaysUnyang/mealDietInfo.json', 'r', encoding='utf-8') as f:
+        JSON_PATH = BASE_DIR + '\\resources\\mealDietinfo.json'
+        with open(JSON_PATH, 'r', encoding='utf-8') as f:
             savedDietInfo = json.load(f)
 
         if (str(savedDietInfo['mealServiceDietInfo'][1]['row'][0]['MLSV_YMD']) == str(today)):
@@ -32,6 +34,6 @@ def _getMealServiceDietInfo(today): #함수명 앞 '_'는 내부 함수임을 �
         }
         requestsResponseData = requests.get(url, params=parameters)
         newDietInfo = json.loads(requestsResponseData.text)
-        with open('todaysUnyang/mealDietInfo.json', 'w') as f:
+        with open(JSON_PATH, 'w') as f:
             json.dump(newDietInfo, f, indent="\t")
         return newDietInfo
