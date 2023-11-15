@@ -1,7 +1,7 @@
 from flask import session
 from flask_socketio import emit, join_room, leave_room, Namespace
 from datetime import datetime
-from todaysUnyang import chatting_DB
+from todaysUnyang import chatting_DB, chatting_safe
 
 class Chat(Namespace):
 
@@ -15,38 +15,64 @@ class Chat(Namespace):
 
     def on_connect(self):
         session_info = Chat._get_session_info()
-        chatting_DB.users(session_info, is_online = True)
+        chatting_DB.push_log(session_info, type = 'user', contents = True)
         pass
 
     def on_disconnect(self):
         session_info = Chat._get_session_info()
-        chatting_DB.users(session_info, is_online = False)
+        chatting_DB.push_log(session_info, type = 'user', contents = False)
         pass
 
     def on_joined(self, *asdf):
         session_info = Chat._get_session_info()
         join_room(session_info['room'])
+        # to_client = {
+        #     'sent_message': '<' + str(session.get('name')) + '>: 입장'
+        # }
+
         to_client = {
-            'sent_message': '<' + str(session.get('name')) + '>: 입장'
+            'name': session_info['name'],
+            'room': session_info['room'],
+            'datetime': session_info['datetime'],
+            'type': 'user',
+            'contents': True
         }
+
         emit('status', to_client, room = session_info['room'])
 
     def on_text(self, data):
         session_info = Chat._get_session_info()
         print('<' + str(session_info['name']) + '>: ' + data['message'])
+
+        if not chatting_safe.is_safe_text(data['message']):
+            message = '***'
+        else:
+            message = data['message']
+
         to_client = {
-            'session_name': session_info['name'],
-            'session_room': session_info['room'],
+            'name': session_info['name'],
+            'room': session_info['room'],
             'datetime': session_info['datetime'],
-            'sent_message': str(data['message'])
+            'type': 'text',
+            'contents': message
         }
+
         emit('message', to_client, room = session_info['room'])
-        chatting_DB.texts(session_info, data['message'])
+        chatting_DB.push_log(session_info, type = 'text', contents = data['message'])
 
     def on_left(self, data):
         session_info = Chat._get_session_info()
         leave_room(session_info['room'])
+        # to_client = {
+        #     'sent_message': '<' + str(session.get('name')) + '> 퇴장'
+        # }
+
         to_client = {
-            'sent_message': '<' + str(session.get('name')) + '> 퇴장'
+            'name': session_info['name'],
+            'room': session_info['room'],
+            'datetime': session_info['datetime'],
+            'type': 'user',
+            'contents': False
         }
+
         emit('status', to_client, room = session_info['room'])
