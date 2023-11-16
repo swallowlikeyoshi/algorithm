@@ -16,10 +16,10 @@ def chatting_lobby():
 
 @chatting.route('/room')
 def chatting_room():
-    name = session.get('name', '')
+    user_name = session.get('name', '')
     room = session.get('room', '')
 
-    if name == '' or room == '':
-        return redirect(url_for('chatting.chatting_lobby'))
+    if user_name == '' or room == '':
+        return redirect(url_for('.chatting_lobby'))
     
-    return render_template('chatting_room.html', name = name, room = room)
+    return render_template('chatting_room.html', name = user_name, room = room)
