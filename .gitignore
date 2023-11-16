@@ -7,9 +7,3 @@ __pycache__
 .vscode
 
 *.db
-
-/include
-
-/Lib
-
-/site-packages
