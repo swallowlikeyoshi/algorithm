@@ -1,4 +1,29 @@
-# algorithm
-It is being used for highschool students projects.  
-The project is planned to build a website that provides school meal diet info, today's weather, timetable, etc.  
-I will be excited when the website using this code is released!  
+# todaysUnyang
+2023 운양고등학교 알고리즘 동아리 학생들이 만든 웹 사이트 입니다.   
+
+
+'''
+제작자   
+
+> 총괄   
+> 김도현   
+
+> 프론트엔드   
+> 양동혁, 김다온, 김하진, 이재형   
+
+> 오늘의 급식 불러오기   
+> 엄정화, 박채원   
+
+> 날씨 정보 불러오기   
+> 강건우, 공은솔, 방채린   
+
+> 시간표 정보 불러오기   
+> 조민규, 황현호, 김종혁   
+
+> 학사일정 불러오기   
+> 정원석, 김유겸, 이혁주   
+
+> 웹앱   
+> 김예준   
+
+'''

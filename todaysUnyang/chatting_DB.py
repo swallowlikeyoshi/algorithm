@@ -2,6 +2,7 @@ import sqlite3
 from todaysUnyang import BASE_DIR
 
 def push_log(session_info, type, contents):
+    # 이름이 ' OR TRUE -- 인 사람은 없겠지...?
     match type:
         case 'text':
             push_text_log(session_info, contents)
