@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="justify-contents">
-    
+<div class="unyang4cut d-flex flex-row p-2">
+    <div class="imagePeeker p-2 overflow-auto" style="width: 50%; max-height: 600px"> 
+        <div class="justify-contents" id="box">
+            <p hx-get="/photo/_getFiles" hx-trigger="load">test</p>
+        </div>
+    </div>
+    <div class="frame p-2" style="width: 50%">
+        <div id="box">
+            <img src="/static/unyang4cut/FRAMES/black.png" alt="frame" style="width: 100%">
+        </div>
+    </div>
 </div>
 
 {% endblock %}
