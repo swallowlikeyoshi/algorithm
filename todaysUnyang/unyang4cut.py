@@ -27,7 +27,7 @@ def _get_all_files():
     # 2. HTML화 하기
     elements = ''
     for folderName in foldersArray:
-        element = '<p class="folder">' + folderName + '</p><br>\n'
+        element = '<p class="folder">' + folderName + '</p>\n'
         elements = elements + element
     # 3. 전송하기
     return elements
@@ -35,10 +35,10 @@ def _get_all_files():
 
 @unyang4cut.route('/_getImages', methods = ['GET'])
 def _get_all_images():
-    # reqName = request.args.get('file_name')
+    reqName = request.args.get('file_name')
 
     # 디버그용
-    reqName = '20803'
+    # reqName = '20803'
 
     try:
         # 1. 같은 이름을 가진 폴더 찾기
@@ -46,13 +46,17 @@ def _get_all_images():
         folderName = foldersArray[foldersArray.index(reqName)]
         # 2. 폴더 안의 모든 이미지의 이름 가져오기
         IMAGE_DIR = FOLDER_DIR + '\\' + folderName
-        imagesArray = os.listdir(IMAGE_DIR)
+        filesArray = os.listdir(IMAGE_DIR)
+        imagesArray = []
+        for fileName in filesArray:
+            if '.jpg' in fileName:
+                imagesArray.append(fileName)
     except:
         return '사진이 없어요.'
     # 3. 가져온 이미지를 HTML화 하기
     elements = ''
     for imageName in imagesArray:
-        HTML_dir = '/unyang4cut/' + folderName + '/' + imageName
+        HTML_dir = '/static/unyang4cut/' + folderName + '/' + imageName
         element = '<img class="img-fluid rounded mb-4 mb-lg-0" src="' + HTML_dir +  '" alt="unyang4cut" />'
         # div로 한번 두르는게 나을까?
         element = '<div class="card">' + element + '</div>\n'
@@ -80,28 +84,51 @@ def select():
 def _imageCollage(frameName: str, folderName: str, imagesArray: list):
     FRAME_WIDTH = 1000
     FRAME_HEIGHT = 3000
-    MARGIN = 50
+    MARGIN = 40
 
     # 1. 프레임 가져오기
         # frameName = 'black'
     frameImage = Image.open(fp=FOLDER_DIR + '\\FRAMES\\' + frameName + '.png')
+    overlayImage = frameImage
+
     # 2. 선택한 이미지 불러오기
     IMAGE_DIR = FOLDER_DIR + '\\' + folderName
-    images = list()
-    for imageName in imagesArray:
-        images.append(Image.open(fp=IMAGE_DIR + '\\' + imageName))
-    # 3. 이미지 합성하고 저장하기
+    # images = list()
+    # for imageName in imagesArray:
+    #     images.append(Image.open(fp=IMAGE_DIR + '\\' + imageName))
+    images = [Image.open(fp=IMAGE_DIR + '\\' + imageName) for imageName in imagesArray]
+
+    # 3. 이미지 합성하기
     imageNum = 0
     for image in images:
         if imageNum > 3:
             break
         # 1. 이미지 크기 조절하기
-        resizedImage = image.resize((FRAME_WIDTH - (MARGIN * 2), 600))
+            # 이거 원본 이미지랑 비율 어긋나면 나중가서 이상해질 듯
+            # 인생네컷 비율은 3:2인듯
+            # 1. 원본 비율에 맞게 가로가 900으로 리사이징하기
+        # image = Image.open('')
+        ratio = image.width / image.height
+        resizedImage = image.resize((FRAME_WIDTH - (MARGIN * 2), int(900 * (1 / ratio))))
+            # 2. 위아래를 잘라서 높이 600에 맞추기
+        resizedImage = resizedImage.crop((0, int((resizedImage.height - 600) / 2), resizedImage.width, int(((resizedImage.height - 600) / 2) + 600)))
         # 2. 이미지 위치 자동 조절하며 사진 붙여넣기 -> 일단 기본 프레임부터 완성하고 하자
         frameImage.paste(resizedImage, ((MARGIN, MARGIN + ((600 + MARGIN) * imageNum))))
         imageNum += 1
-    frameImage.show()
-    frameImage.save(fp=IMAGE_DIR + '\\' + folderName + '.png')
+    frameImage.paste(overlayImage, (0,0))
+
+    # 3.5. 이미지 저장하기, 근데 중복이면 이름 바꾸기
+    try:
+        os.mkdir(IMAGE_DIR + '\\COLLAGED')
+    except:
+        pass
+    imagesArray = os.listdir(IMAGE_DIR + '\\COLLAGED')
+    if len(imagesArray) == 0 :
+        frameImage.save(IMAGE_DIR + '\\COLLAGED\\' + folderName + '.png')
+    else:
+        # fstring occurs error
+        frameImage.save(IMAGE_DIR + '\\COLLAGED\\' + folderName + ' (' + str(len(imagesArray)) + ').png')
+
     # 4. 이미지 주소 or 파일명 반환하기
     collagedImage = IMAGE_DIR + '\\' + folderName + '.png'
     return collagedImage
@@ -110,4 +137,4 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
 if __name__ == '__main__':
     # print(_get_all_files())
     # print(_get_all_images())
-    print(_imageCollage('black', '20803', {'1.jpg', '2.jpg', '3.jpg', '4.jpg'}))
+    print(_imageCollage('black', '10101', ['1.jpg', '2.jpg', '3.jpg', '4.jpg']))
