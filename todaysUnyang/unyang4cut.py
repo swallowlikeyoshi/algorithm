@@ -57,10 +57,10 @@ def _get_all_images():
     # 3. 가져온 이미지를 HTML화 하기
     elements = ''
     for imageName in imagesArray:
-        HTML_dir = '/static/unyang4cut/' + folderName + '/' + imageName
-        element = '<img class="img-fluid rounded mb-4 mb-lg-0" src="' + HTML_dir +  '" alt="unyang4cut" />'
-        # div로 한번 두르는게 나을까?
-        element = '<div class="card">' + element + '</div>\n'
+        HTML_dir = f'/static/unyang4cut/{folderName}/{imageName}'
+        element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="image" />'
+        # div로 한번 두르는게 나을까? -> 안해도 될 듯
+        # element = f'<div class="cardBox">{element}</div>\n'
         elements = elements + element
     # 4. 전송하기
     return elements
@@ -89,7 +89,7 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
 
     # 1. 프레임 가져오기
         # frameName = 'black'
-    frameImage = Image.open(fp=FOLDER_DIR + '\\FRAMES\\' + frameName + '.png')
+    frameImage = Image.open(fp=f'{FOLDER_DIR}\\FRAMES\\{frameName}.png')
     overlayImage = frameImage
 
     # 2. 선택한 이미지 불러오기
@@ -125,13 +125,13 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
         pass
     imagesArray = os.listdir(IMAGE_DIR + '\\COLLAGED')
     if len(imagesArray) == 0 :
-        frameImage.save(IMAGE_DIR + '\\COLLAGED\\' + folderName + '.png')
+        frameImage.save(f'{IMAGE_DIR}\\COLLAGED\\{folderName}.png')
     else:
         # fstring occurs error
-        frameImage.save(IMAGE_DIR + '\\COLLAGED\\' + folderName + ' (' + str(len(imagesArray)) + ').png')
+        frameImage.save(f'{IMAGE_DIR}\\COLLAGED\\{folderName} ({str(len(imagesArray))}).png')
 
     # 4. 이미지 주소 or 파일명 반환하기
-    collagedImage = IMAGE_DIR + '\\' + folderName + '.png'
+    collagedImage = f'{IMAGE_DIR}\\{folderName}.png'
     return collagedImage
 
 

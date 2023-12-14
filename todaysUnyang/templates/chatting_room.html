@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-<script src="/static/js/WebSocket.js"></script>
+
 <div class="container px-4 px-lg-5 p-3">
     <div class="d-flex flex-column mb-3 text-center">
         <h1 class="d-flex p-2 text-bg-primary text-center">오늘의 운양고 채팅방</h1><br>
@@ -14,4 +12,8 @@
         <a class="btn btn-primary btn-sm" href="#!" onclick="leave_room();">나가기</a>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="/static/js/WebSocket.js"></script>
+
 {% endblock %}
