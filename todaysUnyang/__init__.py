@@ -24,4 +24,8 @@ def create_app(is_debug = False):
     from todaysUnyang.todaysUnyang_routes import todaysUnyang
     app.register_blueprint(todaysUnyang)
 
+    # 운양네컷
+    from todaysUnyang.unyang4cut import unyang4cut
+    app.register_blueprint(unyang4cut)
+
     return app
