@@ -73,13 +73,17 @@ def select():
     # 2. HTMX 요청 전송 코드 제작
         # 1. 새 창으로 이미지 띄우기 -> 라우트를 하나 더 만들어야 할 듯
         # 2. 다운로드 버튼 만들기
-        # 3. 인스타 공유 버튼? 할수있으면 해보고 -> 앱에서만 되는 듯, 웹앱 만들거야? 정말로? x
+        # 3. 인스타 공유 버튼? 할수있으면 해보고 -> 앱에서만 되는 듯
     # 3. 다운로드
     return
 
-def _imageCollage(frameName, folderName, imagesArray):
+def _imageCollage(frameName: str, folderName: str, imagesArray: list):
+    FRAME_WIDTH = 1000
+    FRAME_HEIGHT = 3000
+    MARGIN = 50
+
     # 1. 프레임 가져오기
-    frameName = 'black'
+        # frameName = 'black'
     frameImage = Image.open(fp=FOLDER_DIR + '\\FRAMES\\' + frameName + '.png')
     # 2. 선택한 이미지 불러오기
     IMAGE_DIR = FOLDER_DIR + '\\' + folderName
@@ -87,14 +91,16 @@ def _imageCollage(frameName, folderName, imagesArray):
     for imageName in imagesArray:
         images.append(Image.open(fp=IMAGE_DIR + '\\' + imageName))
     # 3. 이미지 합성하고 저장하기
-    margin = 0
+    imageNum = 0
     for image in images:
+        if imageNum > 3:
+            break
         # 1. 이미지 크기 조절하기
-        resizedImage = image.resize((400, 300))
+        resizedImage = image.resize((FRAME_WIDTH - (MARGIN * 2), 600))
         # 2. 이미지 위치 자동 조절하며 사진 붙여넣기 -> 일단 기본 프레임부터 완성하고 하자
-        frameImage.paste(resizedImage, (100, 100 + margin))
-        margin += 100
-    # frameImage.show()
+        frameImage.paste(resizedImage, ((MARGIN, MARGIN + ((600 + MARGIN) * imageNum))))
+        imageNum += 1
+    frameImage.show()
     frameImage.save(fp=IMAGE_DIR + '\\' + folderName + '.png')
     # 4. 이미지 주소 or 파일명 반환하기
     collagedImage = IMAGE_DIR + '\\' + folderName + '.png'
@@ -104,4 +110,4 @@ def _imageCollage(frameName, folderName, imagesArray):
 if __name__ == '__main__':
     # print(_get_all_files())
     # print(_get_all_images())
-    print(_imageCollage('black', '20803', {'_1311150.jpg'}))
+    print(_imageCollage('black', '20803', {'1.jpg', '2.jpg', '3.jpg', '4.jpg'}))
