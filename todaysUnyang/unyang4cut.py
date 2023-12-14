@@ -1,7 +1,7 @@
 from flask import session, redirect, url_for, render_template, request, Blueprint
 import os
-#from todaysUnyang import BASE_DIR
-from __init__ import BASE_DIR
+from todaysUnyang import BASE_DIR
+#from __init__ import BASE_DIR
 
 # wand 라이브러리는 쓰려면 뭘 또 깔아야함... 젠장
 # from wand.image import Image
@@ -17,7 +17,7 @@ def lobby():
     # 1. 기본 UI 제작
     # 2. HTMX 요청 코드 제작
     # 3. 템플릿 렌더해서 리턴
-    return 'Hello'
+    return render_template('unyang4cut.html')
 
 @unyang4cut.route('/_getFiles', methods = ['GET'])
 def _get_all_files():
@@ -27,7 +27,8 @@ def _get_all_files():
     # 2. HTML화 하기
     elements = ''
     for folderName in foldersArray:
-        element = '<p class="folder">' + folderName + '</p>\n'
+        option = f'class="folderName" hx-get="/photo/_getImages?file_name={folderName}" hx-target="#box"'
+        element = f'<p {option}>{folderName}</p>\n'
         elements = elements + element
     # 3. 전송하기
     return elements
