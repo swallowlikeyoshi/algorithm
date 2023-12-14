@@ -8,8 +8,6 @@ __pycache__
 
 *.db
 
-/include
-
 /Lib
 
-/site-packages
+/Scripts

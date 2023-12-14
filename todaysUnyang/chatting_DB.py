@@ -1,17 +1,7 @@
 import sqlite3
 from todaysUnyang import BASE_DIR
 
-def push_log(session_info, type, contents):
-    # 이름이 ' OR TRUE -- 인 사람은 없겠지...?
-    match type:
-        case 'text':
-            push_text_log(session_info, contents)
-        case 'user':
-            push_user_log(session_info, contents)
-        case _:
-            raise
-
-def push_text_log(session_info, message):
+def texts(session_info, message):
     connection = sqlite3.connect(DB_PATH)
     cur = connection.cursor()
     data = (session_info['name'], session_info['room'], session_info['datetime'], 'message', message, session_info['headers'])
@@ -21,17 +11,16 @@ def push_text_log(session_info, message):
     connection.close()
     return
 
-def push_user_log(session_info, is_online):
+def users(session_info, is_online):
     connection = sqlite3.connect(DB_PATH)
     cur = connection.cursor()
-    data = (session_info['name'], session_info['room'], session_info['datetime'], 'is_online', 'online' if is_online == True else 'offline', session_info['headers'])
+    data = (session_info['name'], session_info['room'], session_info['datetime'], 'is_online', 'online' if is_online == 1 else 'offline', session_info['headers'])
     cur.execute("INSERT INTO logs VALUES (?, ?, ?, ?, ?, ?)", data)
     connection.commit()
     connection.close()
     return
 
 DB_PATH = BASE_DIR + '\\resources' + '\\chatting_DB.db'
-
 
 try:
     f = open(DB_PATH, 'r')
