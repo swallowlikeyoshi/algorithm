@@ -1,1 +1,1 @@
-from example import is_safe_word
+# from example import is_safe_word

@@ -21,7 +21,6 @@ def create_app(is_debug = False):
     app.register_blueprint(chatting)
 
     # 오늘의 운양고 HTTP 가져오기
-    
     from todaysUnyang.todaysUnyang_routes import todaysUnyang
     app.register_blueprint(todaysUnyang)
 
