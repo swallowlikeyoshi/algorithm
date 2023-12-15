@@ -1,4 +1,7 @@
 let availableFrame = [false, false, false, false]
+let frame = 'black'
+let folderName = ''
+let imageNames = ['', '', '', '']
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
 
 function pushImage(imageSrc) {
@@ -6,18 +9,29 @@ function pushImage(imageSrc) {
     // framesDiv[imageIdx].src = imageSrc
     // framesDiv[imageIdx].classList.remove('disabled');
     // imageIdx += 1
-    imageIdx = availableFrame.indexOf(false)
+    if (folderName == '') {
+        folderName = document.getElementById('indicator').textContent
+    }
 
+    imageIdx = availableFrame.indexOf(false)
     if (imageIdx < 0 || imageIdx > 3) {
         return
     }
-
     availableFrame[imageIdx] = true
     var image = imageFrameContainer[imageIdx].querySelector('.imageFrame')
     var p = imageFrameContainer[imageIdx].querySelector('.designator')
     image.src = imageSrc
+    imageNames[imageIdx] = imageSrc
     image.classList.remove('disabled')
     p.classList.add('disabled')
+
+    let collage = {
+        'frame': frame,
+        'folderName': folderName,
+        'images': imageNames
+    }
+    var imageCollage = document.getElementById('imageCollage')
+    imageCollage.value = JSON.stringify(collage)
 }
 
 function popImage(alt) {
@@ -32,4 +46,12 @@ function popImage(alt) {
             break
         }
     }
+}
+
+function download() {
+    var collagedImage = document.getElementById('collagedImage')
+    collageImageSrc = collagedImage.src
+    var downloadBtn = document.getElementById('downloadBtn')
+    downloadBtn.href = collagedImage.src
+
 }
