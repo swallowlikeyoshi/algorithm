@@ -19,22 +19,24 @@ def lobby():
     # 3. 템플릿 렌더해서 리턴
     return render_template('unyang4cut.html')
 
-@unyang4cut.route('/_getFiles', methods = ['GET'])
+@unyang4cut.route('/folders', methods = ['GET'])
 def _get_all_files():
     # 1. unyang4cut 폴더 내 모든 폴더 이름 가져오기
     foldersArray = os.listdir(FOLDER_DIR)
+    foldersArray.remove('FRAMES')
     # print(foldersArray)
     # 2. HTML화 하기
     elements = ''
     for folderName in foldersArray:
-        option = f'class="folderName" hx-get="/photo/_getImages?file_name={folderName}" hx-target="#box"'
+        option = f'class="folderName btn btn-light" hx-get="/photo/images?file_name={folderName}" hx-target="#box"'
         element = f'<p {option}>{folderName}</p>\n'
-        elements = elements + element
+        elements = elements + element   
     # 3. 전송하기
+    elements = '<div class="d-flex flex-column justify-content-around">' + elements + '</div>'
     return elements
 
 
-@unyang4cut.route('/_getImages', methods = ['GET'])
+@unyang4cut.route('/images', methods = ['GET'])
 def _get_all_images():
     reqName = request.args.get('file_name')
 
@@ -58,11 +60,13 @@ def _get_all_images():
     elements = ''
     for imageName in imagesArray:
         HTML_dir = f'/static/unyang4cut/{folderName}/{imageName}'
-        element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="image" />'
+        element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="{imageName}" onclick="pushImage(this.src)"/>'
         # div로 한번 두르는게 나을까? -> 안해도 될 듯
         # element = f'<div class="cardBox">{element}</div>\n'
         elements = elements + element
-    # 4. 전송하기
+    # 4. 전송하기=
+    backButton = '<div class="d-flex p-2 justify-content-center"><button type="button" class="btn btn-secondary" hx-get="/photo/folders" hx-target="#box">뒤로 가기</button></div>\n'
+    elements = backButton + elements
     return elements
 
 @unyang4cut.route('/sel', methods = ['GET'])

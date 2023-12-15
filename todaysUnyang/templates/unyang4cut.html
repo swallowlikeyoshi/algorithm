@@ -5,25 +5,57 @@
     .scrollRemove::-webkit-scrollbar {
         display: none;
     }
+
+    .disabled {
+        display: none;
+    }
+
+    .enabled {
+        display: block;
+        pointer-events: none;
+    }
 </style>
 <h1 class="display-3 p-3">운양네컷 꾸미기</h1>
 <div class="unyang4cut d-flex flex-row p-2" style="height: 100%">
-    <div class="p-2 overflow-auto scrollRemove" id="imagePeeker" style="width: 50%; max-height: 600px">
+    <!-- 이미지 피커 -->
+    <div class="p-1 overflow-auto scrollRemove" id="imagePeeker" style="width: 50%; max-height: 100%">
         <div class="justify-contents" id="box">
-            <p hx-get="/photo/_getFiles" hx-trigger="load">test</p>
+            <p class="text-center">폴더를 선택해주세요</p>
+            <p hx-get="/photo/folders" hx-trigger="load">파일 불러오는중...</p>
         </div>
     </div>
+    <!-- 프레임 프리뷰 -->
     <div class="p-1" id="framePeeker" style="width: 50%">
         <div class="frame" style="width: 100%">
-            <div id="box">
-                <img src="/static/unyang4cut/FRAMES/black.png" alt="frame" style="width: 100%"/>
+            <div class="card" id="box">
+                <img class="card-img" src="/static/unyang4cut/FRAMES/black.png" alt="frame" style="width: 100%"/>
+                <div class="card-img-overlay d-flex flex-column p-2 text-center align-middle">
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; background-color: grey; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="1번" onclick="popImage(this.alt)"/>
+                        <p class="designator">1번</p>
+                    </div>
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; background-color: grey; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="2번" onclick="popImage(this.alt)"/>
+                        <p class="designator">2번</p>
+                    </div>
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; background-color: grey; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="3번" onclick="popImage(this.alt)"/>
+                        <p class="designator">3번</p>
+                    </div>
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; background-color: grey; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="4번" onclick="popImage(this.alt)"/>
+                        <p class="designator">4번</p>
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- 버튼 -->
         <div class="d-flex p-2 justify-content-around" id="frameSelector">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#frameModal">프레임</button>
             <button type="button" class="btn btn-success">저장</button>
         </div>
     </div>
+    <!-- 프레임 선택 모달 -->
     <div class="modal fade" id="frameModal" tabindex="-1" aria-labelledby="frameModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -43,5 +75,17 @@
       </div>
 </div>
 <script src="/static/js/unyang4cut.js"></script>
+<script>
+    window.onload = function () {
+            var leftDiv = document.getElementById('imagePeeker');
+            var rightDiv = document.getElementById('framePeeker');
+
+            // 프레임 프리뷰 div의 높이 가져오기
+            var rightDivHeight = rightDiv.clientHeight;
+
+            // 이미지 피커 div에 높이 적용
+            leftDiv.style.height = rightDivHeight + 'px';
+        };
+</script>
 
 {% endblock %}
