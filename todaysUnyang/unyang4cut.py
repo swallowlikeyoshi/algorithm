@@ -67,10 +67,10 @@ def _get_all_images():
         HTML_dir = f'/static/unyang4cut/{folderName}/{imageName}'
         # element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="{imageName}" onclick="pushImage(this.src)"/>'
         option = {
-            'class': 'img-fluid rounded mb-4 mb-lg-0',
+            'class': 'takenImages img-fluid rounded mb-4 mb-lg-0',
             'src': HTML_dir,
             'alt': imageName,
-            'onclick': 'pushImage(this.src)'
+            'onclick': 'pushImage(this.src, this.alt)'
         }
         element = inlineElementWrapper('img', option)
         # div로 한번 두르는게 나을까? -> 안해도 될 듯
@@ -100,9 +100,8 @@ def collage():
     getJson = request.args.get('json')
     collage = json.loads(getJson)
     imageNames = []
-    for imagePath in collage['images']:
-        imagePath = imagePath.split('/')
-        imageNames.append(imagePath[len(imagePath) - 1].replace('%20', ' '))
+    for image in collage['images']:
+        imageNames.append(image['fileName'].replace('%20', ' '))
     collagedImageName = _imageCollage(collage['frame'], collage['folderName'], imageNames)
     HTML_dir = f'/static/unyang4cut/{collage["folderName"]}/COLLAGED/{collagedImageName}'
     option = {
