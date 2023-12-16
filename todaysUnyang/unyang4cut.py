@@ -14,40 +14,42 @@ unyang4cut = Blueprint('photo', __name__, url_prefix='/photo')
 FOLDER_DIR = BASE_DIR + '\\static\\unyang4cut'
 
 @unyang4cut.route('/', methods = ['GET'])
-def lobby():
+def photo():
     # 1. 기본 UI 제작
     # 2. HTMX 요청 코드 제작
     # 3. 템플릿 렌더해서 리턴
     return render_template('unyang4cut.html')
 
 @unyang4cut.route('/folders', methods = ['GET'])
-def _get_all_files():
+def getAllFiles():
     # 1. unyang4cut 폴더 내 모든 폴더 이름 가져오기
     foldersArray = os.listdir(FOLDER_DIR)
     foldersArray.remove('FRAMES')
     # print(foldersArray)
     # 2. HTML화 하기
-    elements = ''
-    for folderName in foldersArray:
+    if len(foldersArray) == 0:
         option = {
-            'class': 'folderName btn btn-light',
-            'hx-get': f'/photo/images?file_name={folderName}',
-            'hx-target': '#box'
+            'class': 'emptyFolder btn btn-light'
         }
-        element = elementWrapper('p', folderName, option)
-        elements = elements + element
-    # 3. 전송하기
-    elements = elementWrapper('div', elements, { 'class': 'd-flex flex-column justify-content-around' })
+        elements = _elementWrapper('p', '폴더가 없어요.<br>나중에 다시 시도해 주세요.', option)
+    else:
+        elements = ''
+        for folderName in foldersArray:
+            option = {
+                'class': 'folderName btn btn-light',
+                'hx-get': f'/photo/images?file_name={folderName}',
+                'hx-target': '#box'
+            }
+            element = _elementWrapper('p', folderName, option)
+            elements = elements + element
+        # 3. 전송하기
+    elements = _elementWrapper('div', elements, { 'class': 'd-flex flex-column justify-content-around' })
     return elements
 
-
 @unyang4cut.route('/images', methods = ['GET'])
-def _get_all_images():
+def getAllImages():
     reqName = request.args.get('file_name')
-
-    # 디버그용
     # reqName = '20803'
-
     try:
         # 1. 같은 이름을 가진 폴더 찾기
         foldersArray = os.listdir(FOLDER_DIR)
@@ -61,42 +63,48 @@ def _get_all_images():
                 imagesArray.append(fileName)
     except:
         return '사진이 없어요.'
+    
     # 3. 가져온 이미지를 HTML화 하기
     elements = ''
     for imageName in imagesArray:
         HTML_dir = f'/static/unyang4cut/{folderName}/{imageName}'
         # element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="{imageName}" onclick="pushImage(this.src)"/>'
+        
+        # 가져온 이미지들을 요소화 하기
         option = {
             'class': 'img-fluid rounded mb-4 mb-lg-0',
             'src': HTML_dir,
             'alt': imageName,
             'onclick': 'pushImage(this.src)'
         }
-        element = inlineElementWrapper('img', option)
-        # div로 한번 두르는게 나을까? -> 안해도 될 듯
-        # element = f'<div class="cardBox">{element}</div>\n'
+        element = _inline_elementWrapper('img', option)
+
         elements = elements + element
-    # 4. 전송하기=
-    # backButton = '<div class="d-flex p-2 justify-content-center"><button type="button" class="btn btn-secondary" hx-get="/photo/folders" hx-target="#box">뒤로 가기</button></div>\n'
+    # 4. 전송하기
+
+    # 현재 폴더 표시용 버튼
     option = {
         'type': 'button',
         'class': 'btn btn-primary',
         'id': 'indicator'
     }
-    indicator = elementWrapper('button', folderName, option)
+    indicator = _elementWrapper('button', folderName, option)
+
+    # 뒤로가기 버튼
     option = { 
         'type': 'button',
         'class': 'btn btn-secondary',
         'hx-get': '/photo/folders',
         'hx-target': '#box'
     }
-    btn = elementWrapper('button', '뒤로 가기', option)
-    backButton = elementWrapper('div', indicator+btn, { 'class': 'd-flex p-2 justify-content-center' })
+    btn = _elementWrapper('button', '뒤로 가기', option)
+
+    backButton = _elementWrapper('div', indicator+btn, { 'class': 'd-flex p-2 justify-content-center' })
     elements = backButton + elements
     return elements
 
 @unyang4cut.route('/collage', methods = ['GET'])
-def collage():
+def getCollagedImage():
     getJson = request.args.get('json')
     collage = json.loads(getJson)
     imageNames = []
@@ -111,7 +119,7 @@ def collage():
         'src': HTML_dir,
         'alt': collagedImageName
     }
-    element = inlineElementWrapper('img', option)
+    element = _inline_elementWrapper('img', option)
     return element
 
 def _imageCollage(frameName: str, folderName: str, imagesArray: list):
@@ -163,14 +171,14 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
         frameImage.save(f'{IMAGE_DIR}\\COLLAGED\\{folderName} ({str(len(imagesArray))}).png')
         return f'{folderName} ({str(len(imagesArray))}).png'
 
-def elementWrapper(tag: str, contents: str, option: dict):
+def _elementWrapper(tag: str, contents: str, option: dict):
     optstr = ''
     for i in option.keys():
         optstr += f' {i}="{option[i]}"'
     element = f'<{tag} {optstr}>{contents}</{tag}>'
     return element
 
-def inlineElementWrapper(tag: str, option: dict):
+def _inline_elementWrapper(tag: str, option: dict):
     optstr = ''
     for i in option.keys():
         optstr += f' {i}="{option[i]}"'
@@ -182,4 +190,4 @@ if __name__ == '__main__':
     # print(_get_all_files())
     # print(_get_all_images())
     #print(_imageCollage('black', '10101', ['1.jpg', '2.jpg', '3.jpg', '4.jpg']))
-    print(collage('{"frame":"black","folderName":"20803","images":["http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg"]}'))
+    print(getCollagedImage('{"frame":"black","folderName":"20803","images":["http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg"]}'))
