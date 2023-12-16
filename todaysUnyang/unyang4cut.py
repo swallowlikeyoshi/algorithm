@@ -123,6 +123,56 @@ def getAllImages():
     elements = backButton + elements
     return elements
 
+@unyang4cut.route('/frames', methods = ['GET'])
+def getAllFrames():
+    FRAME_DIR = os.path.join(FOLDER_DIR, 'FRAMES')
+    HTML_DIR = f'/static/unyang4cut/FRAMES'
+
+    # 1. 프레임 JSON 파일 가져오기
+    try:
+        with open(os.path.join(FRAME_DIR, 'FRAMES.json'), 'r', encoding='UTF-8') as json_file:
+            framesData = json.load(json_file)
+    except Exception as e:
+        return f'파일을 여는 중 오류가 발생했어요: {e}'
+    
+    # 2. 각 프레임 html화 하기
+    frameElements = []
+    for frame in framesData['FRAMES']:
+        # 1. img 태그 이용해서 프레임 이미지 띄우는 요소
+        option = {
+            'class': 'frameImage p-2',
+            'onclick': 'setFrame(this.src, this.alt)',
+            'src': f'{HTML_DIR}/{frame["FILE_NAME"]}',
+            'alt': f'{frame["NAME"]}'
+        }
+        imageElement = _inline_elementWrapper('img', option)
+
+        # 2. 이미지 아래 프레임 이름 띄우는 요소
+        option = {
+            'class': 'frameName p-2',
+            'onlick': 'setFrame(this.src, this.alt)',
+            'src': f'{HTML_DIR}/{frame["FILE_NAME"]}',
+            'alt': f'{frame["NAME"]}'
+        }
+        nameElement = _elementWrapper('p', frame["DISPLAY_NAME"], option)
+
+        option = {
+            'class': 'card p-2',
+            'style': 'width: 45%; margin-right: 10px; min-width: 100px;'
+        }
+        element = _elementWrapper('div', imageElement + nameElement, option)
+        frameElements.append(element)
+        # 3. onclick시 js 함수 실행
+            # 1. frame 변수 이름 바꾸기
+            # 2. framePeeker에 보여지는 이미지 위치 바꾸기
+            # 3. json 파일 불러와서 각 프레임마다 이미지 위치 바꾸기 -> 말만 들어도 쉽진 않을 것 같다...
+
+    finalElement = ''
+    for frame in frameElements:
+        finalElement = finalElement + frame
+    finalElement = _elementWrapper('div', finalElement, { 'class': 'd-flex flex-row overflow-auto' })
+    return finalElement
+
 @unyang4cut.route('/collage', methods = ['GET'])
 def getCollagedImage():
     getJson = request.args.get('json')
@@ -141,7 +191,7 @@ def getCollagedImage():
     }
     collagedImageElement = _inline_elementWrapper('img', option)
     
-    modal_body = _elementWrapper('div', collagedImageElement, { 'id': 'result', 'class': 'd-flex justify-content-center text-center p-2'})
+    modal_body = _elementWrapper('div', collagedImageElement, { 'id': 'result', 'class': 'd-flex justify-content-center text-center p-2', 'style': 'background-color: grey;'})
     modal_footer = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading">닫기</button><a href="#" id="downloadBtn" download><button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button></a><button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>'
     modal_footer = _elementWrapper('div', modal_footer, { 'class': 'modal-footer'})
     return modal_body + modal_footer
@@ -151,13 +201,12 @@ def closeDownloadModal():
     return '<div class="modal-body"><div id="result" class="d-flex justify-content-center text-center"><img id="indicator" class="htmx-indicator" src="/static/spinner.gif" /><br><h5>제작중...</h5></div></div>'
 
 def _imageCollage(frameName: str, folderName: str, imagesArray: list):
-    MARGIN = 40
     IMAGE_DIR = os.path.join(FOLDER_DIR, folderName)
     JSON_PATH = os.path.join(FOLDER_DIR, 'FRAMES', 'FRAMES.json')
 
     # 0. json 데이터 가져오기
     try:
-        with open(JSON_PATH, 'r') as json_file:
+        with open(JSON_PATH, 'r', encoding='UTF-8') as json_file:
             framesData = json.load(json_file)
     except Exception as e:
         return f'파일을 여는 중 오류가 발생했어요: {e}'
@@ -167,6 +216,10 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
         if frame['NAME'] == frameName:
             frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME']))
             selectedFrame = frame
+            if frame['IS_OVERLAYED'] == True:
+                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME']))
+            else:
+                overlayImage = frameImage
             break
     overlayImage = frameImage
 
@@ -179,14 +232,6 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
         images = [Image.open(fp=os.path.join(RESIZED_DIR, imageName)) for imageName in imagesArray]
     except:
         return '만드는 중에 오류가 발생했어요.'
-
-    # 3. 이미지 합성하기
-    # imageNum = 0
-    # for image in images:
-    #     if imageNum > 3:
-    #         break
-    #     frameImage.paste(image, ((MARGIN, MARGIN + ((600 + MARGIN) * imageNum))))
-    #     imageNum += 1
 
     for idx in range(0, selectedFrame['IMAGE']):
         frameImage.paste(images[idx], (selectedFrame['POSITION'][idx]['POINT_X'], selectedFrame['POSITION'][idx]['POINT_Y']))
