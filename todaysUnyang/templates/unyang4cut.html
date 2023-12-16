@@ -58,7 +58,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#frameModal">프레임</button>
             <button type="generate" id="generate" class="btn btn-success" hx-get="/photo/collage"
-                hx-include="[name='json']" hx-target="#result" hx-indicator="#indicator" data-bs-toggle="modal"
+                hx-include="[name='json']" hx-target="#collageLoading" hx-indicator="#indicator" data-bs-toggle="modal"
                 data-bs-target="#downloadModal">만들기</button>
             <input class="visually-hidden" id="imageCollage" type="json" name="json" hx-get="/photo/collage"
                 hx-target="#result">
@@ -91,20 +91,22 @@
                     <h1 class="modal-title fs-5" id="downloadModalLable">다운로드</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div id="result" class="d-flex justify-content-center text-center">
-                        <img id="indicator" class="htmx-indicator" src="/static/spinner.gif" /><br>
-                        <h5>제작중...</h5>
+                <div id="collageLoading">
+                    <div class="modal-body">
+                        <div id="result" class="d-flex justify-content-center text-center">
+                            <img id="indicator" class="htmx-indicator" src="/static/spinner.gif" /><br>
+                            <h5>제작중...</h5>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        onclick="removeImage()">닫기</button>
-                    <a href="#" id="downloadBtn" download>
-                        <button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button>
-                    </a>
-                    <button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>
-
+                    <!-- <div class="modal-footer">
+                        닫기 버튼 클릭시 백엔드에서 result 요소를 통째로 다시 받아와서 치환함.
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"
+                            >닫기</button>
+                        <a href="#" id="downloadBtn" download>
+                            <button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button>
+                        </a>
+                        <button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>
+                    </div> -->
                 </div>
             </div>
         </div>

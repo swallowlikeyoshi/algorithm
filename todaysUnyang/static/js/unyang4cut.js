@@ -1,5 +1,5 @@
 let availableFrame = [false, false, false, false]
-let frame = 'black'
+let frame = 'BLACK'
 let folderName = ''
 let imageNames = [{}, {}, {}, {}]
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
@@ -92,7 +92,7 @@ function downloadAllFiles() {
     var takenImages = document.getElementsByClassName('img-fluid rounded mb-4 mb-lg-0 takenImages');
 
     for (const takenImage of takenImages) {
-        files.push({ url: takenImage.src, fileName: takenImage.alt });
+        files.push({ url: takenImage.src.replace('/RESIZED', ''), fileName: takenImage.alt });
     }
 
     var collagedImage = document.getElementById('collagedImage')
