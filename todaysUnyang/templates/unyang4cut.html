@@ -20,7 +20,10 @@
     <!-- 이미지 피커 -->
     <div class="p-1 overflow-auto scrollRemove" id="imagePeeker" style="width: 50%; max-height: 100%">
         <div class="justify-contents" id="box">
-            <p class="text-center">폴더를 선택해주세요</p>
+            <div class="text-center card p-1" style="margin-bottom: 10px;">
+                <p>폴더를 선택해주세요.</p>
+                <p>처음 불러오는 경우,<br>시간이 조금 걸릴 수 있어요.</p>
+            </div>
             <p hx-get="/photo/folders" hx-trigger="load">파일 불러오는중...</p>
         </div>
     </div>
@@ -56,7 +59,7 @@
         <!-- 버튼 -->
         <div class="d-flex p-2 justify-content-around" id="frameSelector">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#frameModal">프레임</button>
+                data-bs-target="#frameModal" hx-get="/photo/frames" hx-target="#frameList" style="min-width: ;">프레임</button>
             <button type="generate" id="generate" class="btn btn-success" hx-get="/photo/collage"
                 hx-include="[name='json']" hx-target="#collageLoading" hx-indicator="#indicator" data-bs-toggle="modal"
                 data-bs-target="#downloadModal">만들기</button>
@@ -73,8 +76,8 @@
                     <h1 class="modal-title fs-5" id="frameModalLabel">프레임 선택</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    프레임들
+                <div class="modal-body" id="frameList">
+                    <p hx-get="/photo/frames">불러오는 중...</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

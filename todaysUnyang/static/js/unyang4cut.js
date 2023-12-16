@@ -1,5 +1,5 @@
 let availableFrame = [false, false, false, false]
-let frame = 'BLACK'
+let frame = 'WHITE'
 let folderName = ''
 let imageNames = [{}, {}, {}, {}]
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
