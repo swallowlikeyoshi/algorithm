@@ -1,27 +1,43 @@
-let availableFrame = [false, false, false, false]
+let isFrameFilled = [false, false, false, false]
+let filledImageInfo = [{}, {}, {}, {}]
 let frame = 'WHITE'
 let folderName = ''
-let imageNames = [{}, {}, {}, {}]
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
+let isFrameSelected = false
 
-function pushImage(imageSrc, imageAlt) {
-    // framesDiv = document.getElementsByClassName('imageFrame')
-    // framesDiv[imageIdx].src = imageSrc
-    // framesDiv[imageIdx].classList.remove('disabled');
-    // imageIdx += 1
-    if (folderName == '') {
-        folderName = document.getElementById('indicator').textContent
+function startUp() {
+    takenImageArray = document.querySelectorAll('.takenImages')
+    if (takenImageArray) {
+        for (const takenImage of takenImageArray) {
+            takenImage.classList.remove('hide')
+        }
+        isFrameSelected = true
     }
+}
 
-    imageIdx = availableFrame.indexOf(false)
+function setFolderName(currentFolderName) {
+    if (folderName == '') {
+        folderName = currentFolderName
+    }
+}
+
+function pushImage(pushedImageSrc, pushedImageName) {
+    // 프레임 위의 이미지가 꽉 찼는지 확인
+    imageIdx = isFrameFilled.indexOf(false)
     if (imageIdx < 0 || imageIdx > 3) {
         return
     }
-    availableFrame[imageIdx] = true
-    var image = imageFrameContainer[imageIdx].querySelector('.imageFrame')
 
-    image.src = imageSrc
-    imageNames[imageIdx] = { url: image.src, fileName: imageAlt }
+    if (!isFrameSelected) {
+        return
+    }
+
+    isFrameFilled[imageIdx] = true
+
+    var image = imageFrameContainer[imageIdx].querySelector('.imageFrame')
+    image.src = pushedImageSrc
+
+    filledImageInfo[imageIdx] = { url: image.src, fileName: pushedImageName }
 
     var p = imageFrameContainer[imageIdx].querySelector('.designator')
     image.classList.remove('disabled')
@@ -30,7 +46,7 @@ function pushImage(imageSrc, imageAlt) {
     let collage = {
         'frame': frame,
         'folderName': folderName,
-        'images': imageNames
+        'images': filledImageInfo
     }
     var imageCollage = document.getElementById('imageCollage')
     imageCollage.value = JSON.stringify(collage)
@@ -44,7 +60,7 @@ function popImage(alt) {
             image.classList.add('disabled')
             image.src = '#'
             p.classList.remove('disabled')
-            availableFrame[idx] = false
+            isFrameFilled[idx] = false
             break
         }
     }
@@ -52,9 +68,25 @@ function popImage(alt) {
 
 function download() {
     var collagedImage = document.getElementById('collagedImage')
-    collageImageSrc = collagedImage.src
+    collagepushedImageSrc = collagedImage.src
     var downloadBtn = document.getElementById('downloadBtn')
     downloadBtn.href = collagedImage.src
+}
+
+function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
+    console.log(selectedFrameSrc)
+    console.log(selectedFrameName)
+    console.log(overlayFrameSrc)
+
+    frame = selectedFrameName
+    frameImageElement = document.getElementById('backgroundFrameImage')
+    frameImageElement.src = selectedFrameSrc
+    frameImageElement.alt = selectedFrameName
+    overlayImageElement = document.getElementById('overlayFrameImage')
+    overlayImageElement.src = overlayFrameSrc
+    frameModalCloseBtn = document.getElementById('frameModalClose').click()
+
+    startUp()
 }
 
 function downloadFile(url, fileName) {
