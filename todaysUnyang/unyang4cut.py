@@ -1,5 +1,6 @@
 from flask import render_template, request, Blueprint
 import urllib
+from urllib.parse import unquote
 import os
 import json
 from todaysUnyang import BASE_DIR
@@ -9,7 +10,7 @@ from todaysUnyang import BASE_DIR
 # from wand.image import Image
 # 차라리 다른 라이브러리를 쓰는게 낫지 https://wikidocs.net/153080
 from PIL import Image, ImageDraw, ImageFont
-import piexif
+
 
 unyang4cut = Blueprint('photo', __name__, url_prefix='/photo')
 
@@ -28,9 +29,8 @@ def getAllFiles():
         # 1. unyang4cut 폴더 내 모든 폴더 이름 가져오기
         foldersArray = [folder for folder in os.listdir(FOLDER_DIR) if os.path.isdir(os.path.join(FOLDER_DIR, folder))]
 
-        for folder in foldersArray:
-            if 'FRAMES' in folder:
-                foldersArray.pop(foldersArray.index(folder))
+        folderBlackList = ['FRAMES', 'COLLAGED']
+        foldersArray = [folder for folder in foldersArray if all(blackFolder not in folder for blackFolder in folderBlackList)]
 
         # 2. HTML화 하기
         if not foldersArray:
@@ -65,7 +65,7 @@ def getAllImages():
     try:
         # 1. 같은 이름을 가진 폴더 찾기
         if reqName not in os.listdir(FOLDER_DIR):
-            raise ValueError(f"폴더 '{reqName}'을 찰을 수 없습니다.")
+            raise ValueError(f"폴더 '{reqName}'을 찾을 수 없습니다.")
         folderName = reqName
 
         # 1.5 이미지 리사이징 하기
@@ -77,7 +77,7 @@ def getAllImages():
         filesArray = [fileName for fileName in os.listdir(IMAGE_DIR)]
         imagesArray = []
         for fileName in filesArray:
-            if '.jpg' in fileName:
+            if '.jpg' or '.JPG' in fileName:
                 imagesArray.append(fileName)
     except ValueError as ve:
         return str(ve)
@@ -106,7 +106,9 @@ def getAllImages():
     option = {
         'type': 'button',
         'class': 'btn btn-primary',
-        'id': 'indicator'
+        'id': 'indicator',
+        'onload': 'setFolderName(this.alt)',
+        'alt': folderName
     }
     indicator = _elementWrapper('button', folderName, option)
 
@@ -138,21 +140,27 @@ def getAllFrames():
     # 2. 각 프레임 html화 하기
     frameElements = []
     for frame in framesData['FRAMES']:
+        if frame['IS_OVERLAYED']:
+            overlayFileName = frame['OVERLAY_FILE_NAME']
+        else:
+            overlayFileName = 'clear.png'
         # 1. img 태그 이용해서 프레임 이미지 띄우는 요소
         option = {
             'class': 'frameImage p-2',
-            'onclick': 'setFrame(this.src, this.alt)',
+            'onclick': "setFrame(this.src, this.alt, this.getAttribute('overlay'))",
             'src': f'{HTML_DIR}/{frame["FILE_NAME"]}',
-            'alt': f'{frame["NAME"]}'
+            'alt': f'{frame["NAME"]}',
+            'overlay': f'{HTML_DIR}/{overlayFileName}'
         }
         imageElement = _inline_elementWrapper('img', option)
 
         # 2. 이미지 아래 프레임 이름 띄우는 요소
         option = {
             'class': 'frameName p-2',
-            'onlick': 'setFrame(this.src, this.alt)',
+            'onlick': 'setFrame(this.src, this.alt, this.overlay)',
             'src': f'{HTML_DIR}/{frame["FILE_NAME"]}',
-            'alt': f'{frame["NAME"]}'
+            'alt': f'{frame["NAME"]}',
+            'overlay': f'{HTML_DIR}/{overlayFileName}'
         }
         nameElement = _elementWrapper('p', frame["DISPLAY_NAME"], option)
 
@@ -177,12 +185,16 @@ def getAllFrames():
 def getCollagedImage():
     getJson = request.args.get('json')
     collage = json.loads(getJson)
-    imageNames = []
-    for image in collage['images']:
-        imageNames.append(image['fileName'].replace('%20', ' '))
 
-    collagedImageName = _imageCollage(collage['frame'], collage['folderName'], imageNames)
-    HTML_dir = f'/static/unyang4cut/{collage["folderName"]}/COLLAGED/{collagedImageName}'
+    selectedImageInfo = []
+    for image in collage['images']:
+        decoded_path = unquote(image['url'].split("/static/unyang4cut/")[-1])
+        windows_path = os.path.join(*decoded_path.split("/"))
+        selectedImageInfo.append({ 'dir': FOLDER_DIR + '\\' + windows_path, 'fileName': image['fileName'].replace('%20', ' ') })
+
+    collagedImageName = _imageCollage(collage['frame'], selectedImageInfo)
+
+    HTML_dir = f'/static/unyang4cut/COLLAGED/{collagedImageName}'
     option = {
         'class': 'img-fluid rounded mb-4 mb-lg-0',
         'id': 'collagedImage',
@@ -200,8 +212,7 @@ def getCollagedImage():
 def closeDownloadModal():
     return '<div class="modal-body"><div id="result" class="d-flex justify-content-center text-center"><img id="indicator" class="htmx-indicator" src="/static/spinner.gif" /><br><h5>제작중...</h5></div></div>'
 
-def _imageCollage(frameName: str, folderName: str, imagesArray: list):
-    IMAGE_DIR = os.path.join(FOLDER_DIR, folderName)
+def _imageCollage(frameName: str, selectedImageInfo: dict):
     JSON_PATH = os.path.join(FOLDER_DIR, 'FRAMES', 'FRAMES.json')
 
     # 0. json 데이터 가져오기
@@ -214,42 +225,37 @@ def _imageCollage(frameName: str, folderName: str, imagesArray: list):
     # 1. 프레임 가져오기
     for frame in framesData['FRAMES']:
         if frame['NAME'] == frameName:
-            frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME']))
+            frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME'])).convert("RGBA")
             selectedFrame = frame
             if frame['IS_OVERLAYED'] == True:
-                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME']))
+                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME'])).convert("RGBA")
             else:
                 overlayImage = frameImage
             break
-    overlayImage = frameImage
 
     # 2. 선택한 이미지 불러오기
+    images = []
     try:
-        RESIZED_DIR = os.path.join(IMAGE_DIR, 'RESIZED')
-        # images = list()
-        # for imageName in imagesArray:
-        #     images.append(Image.open(fp=IMAGE_DIR + '\\' + imageName))
-        images = [Image.open(fp=os.path.join(RESIZED_DIR, imageName)) for imageName in imagesArray]
-    except:
-        return '만드는 중에 오류가 발생했어요.'
+        for objectImage in selectedImageInfo:
+            IMAGE_DIR = os.path.dirname(objectImage['dir'])
+            images.append(Image.open(fp=os.path.join(IMAGE_DIR, objectImage['fileName'])).convert("RGBA"))
+    except Exception as e:
+        return f'만드는 중에 오류가 발생했어요.'
 
     for idx in range(0, selectedFrame['IMAGE']):
         frameImage.paste(images[idx], (selectedFrame['POSITION'][idx]['POINT_X'], selectedFrame['POSITION'][idx]['POINT_Y']))
-
-    frameImage.paste(overlayImage, (0,0))
+    
+    # 이미지를 복사하여 overlayImage에 변경 적용
+    frameImage.alpha_composite(overlayImage, (0,0))
 
     # 3.5. 이미지 저장하기, 근데 중복이면 이름 바꾸기
     try:
-        os.mkdir(IMAGE_DIR + '\\COLLAGED')
+        os.mkdir(FOLDER_DIR + '\\COLLAGED')
     except:
         pass
-    imagesArray = os.listdir(IMAGE_DIR + '\\COLLAGED')
-    if len(imagesArray) == 0 :
-        frameImage.save(f'{IMAGE_DIR}\\COLLAGED\\{folderName}.png')
-        return f'{folderName}.png'
-    else:
-        frameImage.save(f'{IMAGE_DIR}\\COLLAGED\\{folderName} ({str(len(imagesArray))}).png')
-        return f'{folderName} ({str(len(imagesArray))}).png'
+    imagesArray = os.listdir(FOLDER_DIR + '\\COLLAGED')
+    frameImage.save(f'{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png')
+    return f'{len(imagesArray)}.png'
 
 # GPT
 def _imageResize(folderName: str):
