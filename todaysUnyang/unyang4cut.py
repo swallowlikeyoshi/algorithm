@@ -1,8 +1,10 @@
-from flask import render_template, request, Blueprint
+from flask import session, render_template, request, Blueprint
 import urllib
 from urllib.parse import unquote
 import os
 import json
+from datetime import datetime
+import sqlite3
 from todaysUnyang import BASE_DIR
 #from __init__ import BASE_DIR
 
@@ -11,17 +13,44 @@ from todaysUnyang import BASE_DIR
 # 차라리 다른 라이브러리를 쓰는게 낫지 https://wikidocs.net/153080
 from PIL import Image, ImageDraw, ImageFont
 
-
 unyang4cut = Blueprint('photo', __name__, url_prefix='/photo')
-
 FOLDER_DIR = os.path.join(BASE_DIR, 'static', 'unyang4cut')
+DB_PATH = os.path.join(FOLDER_DIR, 'unyang4cut_log.db')
+
+try:
+    f = open(DB_PATH, 'r')
+except:
+    f = open(DB_PATH, 'w')
+    connection = sqlite3.connect(DB_PATH)
+    cur = connection.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS unyang4cutLogs (name text, password text, time DATETIME, status text)")
+    connection.commit()
+    cur.close()
+    connection.close()
+finally:
+    f.close()
 
 @unyang4cut.route('/', methods = ['GET'])
 def photo():
-    # 1. 기본 UI 제작
-    # 2. HTMX 요청 코드 제작
-    # 3. 템플릿 렌더해서 리턴
     return render_template('unyang4cut.html')
+
+@unyang4cut.route('/registration', methods = ['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        if request.form['IS_STARTING'] == "YES":
+            session['NAME'] = request.form['name']
+            session['PASSWORD'] = request.form['password']
+            session['START_TIME'] = datetime.now()
+            _shootingLog(session['NAME'], session['PASSWORD'], session['START_TIME'], "START")
+            # print(f'이름:{session["NAME"]}, 비밀번호:{session["PASSWORD"]}, 시작 시간:{session["START_TIME"]}')
+            return '<div id="terminate" class="p-2 d-flex justify-content-center"><form hx-post="/photo/registration"><input class="visually-hidden" type="checkbox" name="IS_STARTING" value="NO" checked><button class="btn btn-danger" hx-post="/photo/registration" hx-target="#terminate">그만 찍기</button></form></div>'
+        else:
+            session['END_TIME'] = datetime.now()
+            _shootingLog(session['NAME'], session['PASSWORD'], session['END_TIME'], "END")
+            # print(f'이름: {session["NAME"]}, 종료 시각: {session["END_TIME"]}')
+            return '<div class="p-2 text-center"><p>촬영 종료</p></div>'
+    else:
+        return render_template('unyang4cut_registration.html')
 
 @unyang4cut.route('/folders', methods=['GET'])
 def getAllFiles():
@@ -44,7 +73,8 @@ def getAllFiles():
                 option = {
                     'class': 'folderName btn btn-light',
                     'hx-get': f'/photo/images?file_name={urllib.parse.quote(folderName)}',
-                    'hx-target': '#box'
+                    'hx-target': '#box',
+                    'onclick': f'setFolderName({folderName})'
                 }
                 element = _elementWrapper('p', folderName, option)
                 elements += element
@@ -156,7 +186,7 @@ def getAllFrames():
         # 2. 이미지 아래 프레임 이름 띄우는 요소
         option = {
             'class': 'frameName p-2',
-            'onlick': 'setFrame(this.src, this.alt, this.overlay)',
+            'onclick': 'setFrame(this.src, this.alt, this.overlay)',
             'src': f'{HTML_DIR}/{frame["FILE_NAME"]}',
             'alt': f'{frame["NAME"]}',
             'overlay': f'{HTML_DIR}/{overlayFileName}'
@@ -184,7 +214,7 @@ def getCollagedImage():
     # 1. HTML 경로에서 PATH로 바꾸기
     selectedImageInfo = []
     for image in collage['images']:
-        decoded_path = unquote(image['url'].split("/static/unyang4cut/")[-1])
+        decoded_path = unquote(image['url'].split("/static/unyang4cut/")[-1]).replace('%20', ' ')
         windows_path = os.path.join(*decoded_path.split("/"))
         selectedImageInfo.append({ 'dir': FOLDER_DIR + '\\' + windows_path, 'fileName': image['fileName'].replace('%20', ' ') })
 
@@ -221,13 +251,15 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
     
     # 1. 프레임 가져오기
     try:
-        if frameName in framesData['FRAMES']:
-            selectedFrameInfo = framesData[framesData['FRAMES'].index(frameName)]
-            frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', selectedFrameInfo['FILE_NAME'])).convert("RGBA")
-            if selectedFrameInfo['IS_OVERLAYED']:
-                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', selectedFrameInfo['OVERLAY_FILE_NAME'])).convert("RGBA")
-            else:
-                overlayImage = frameImage
+        for frame in framesData['FRAMES']:
+            if frame['NAME'] == frameName:
+                frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME'])).convert("RGBA")
+                selectedFrameInfo = frame
+                if frame['IS_OVERLAYED'] == True:
+                    overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME'])).convert("RGBA")
+                else:
+                    overlayImage = frameImage
+                break
         else:
             ValueError(f'{frameName} 프레임을 찾을 수 없습니다.')
     except ValueError as e:
@@ -235,15 +267,6 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
     except:
         return '프레임을 여는 중에 오류가 발생했어요.'
 
-    # for frame in framesData['FRAMES']:
-    #     if frame['NAME'] == frameName:
-    #         frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME'])).convert("RGBA")
-    #         selectedFrameInfo = frame
-    #         if frame['IS_OVERLAYED'] == True:
-    #             overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME'])).convert("RGBA")
-    #         else:
-    #             overlayImage = frameImage
-    #         break
 
     # 2. 선택한 이미지 불러오기
     images = []
@@ -306,9 +329,19 @@ def _inline_elementWrapper(tag: str, option: dict):
     optstr = ' '.join(f'{k}="{v}"' for k, v in option.items())
     return f'<{tag} {optstr}/>'
 
+def _shootingLog(name: str, password: str, time: datetime, status: str):
+    DBConnection = sqlite3.connect(DB_PATH)
+    cur = DBConnection.cursor()
+    # 이걸로 방어가 될까
+    log = [name.replace("'", ''), password.replace("'", ''), time, status]
+    cur.execute("INSERT INTO unyang4cutLogs VALUES (?, ?, ? ,?)", log)
+    DBConnection.commit()
+    DBConnection.close()
+    return
+
 if __name__ == '__main__':
     # print(_get_all_files())
     # print(_get_all_images())
-    print(_imageCollage('BLACK', '테스트', ['_1311150.jpg', '_1311150.jpg', '_1311150.jpg', '_1311150.jpg']))
-    #print(getCollagedImage('{"frame":"black","folderName":"20803","images":["http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg","http://127.0.0.1/static/unyang4cut/10101/2.jpg"]}'))
+    #print(_imageCollage('BLACK', '테스트', ['_1311150.jpg', '_1311150.jpg', '_1311150.jpg', '_1311150.jpg']))
+    print(getCollagedImage())
     #_imageResize('테스트')
