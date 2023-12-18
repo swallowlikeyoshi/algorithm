@@ -78,7 +78,7 @@
         <!-- 버튼 -->
         <div class="d-flex p-2 justify-content-around" id="frameSelector">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#frameModal"
-                hx-get="/photo/frames" hx-target="#frameList" style="min-width: ;">프레임</button>
+                hx-get="/photo/frames" hx-target="#frameList">프레임</button>
             <button type="generate" id="generate" class="btn btn-success" hx-get="/photo/collage"
                 hx-include="[name='json']" hx-target="#collageLoading" hx-indicator="#indicator" data-bs-toggle="modal"
                 data-bs-target="#downloadModal">만들기</button>
@@ -111,7 +111,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="downloadModalLable">다운로드</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"></button>
                 </div>
                 <div id="collageLoading">
                     <div class="modal-body">

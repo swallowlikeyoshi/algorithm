@@ -16,9 +16,7 @@ function startUp() {
 }
 
 function setFolderName(currentFolderName) {
-    if (folderName == '') {
-        folderName = currentFolderName
-    }
+    folderName = currentFolderName
 }
 
 function pushImage(pushedImageSrc, pushedImageName) {
