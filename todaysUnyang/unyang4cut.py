@@ -37,7 +37,7 @@ def getAllFiles():
             option = {
                 'class': 'emptyFolder btn btn-light'
             }
-            elements = _elementWrapper('p', '폴더가 없어요.<br>나중에 다시 시도해 주세요.', option)
+            ValueError(_elementWrapper('p', '폴더가 없어요.<br>나중에 다시 시도해 주세요.', option))
         else:
             elements = ''
             for folderName in foldersArray:
@@ -48,9 +48,10 @@ def getAllFiles():
                 }
                 element = _elementWrapper('p', folderName, option)
                 elements += element
-
-    except Exception as e:
-        return f'오류가 발생했습니다: {str(e)}'
+    except ValueError as e:
+        return str(e)
+    except Exception:
+        return '파일 불러오기 오류.'
 
     # 3. 전송하기
     elements = _elementWrapper('div', elements, {'class': 'd-flex flex-column justify-content-around'})
@@ -59,7 +60,6 @@ def getAllFiles():
 @unyang4cut.route('/images', methods = ['GET'])
 def getAllImages():
     reqName = request.args.get('file_name')
-    # reqName = '20803'
 
     # GPT
     try:
@@ -79,17 +79,16 @@ def getAllImages():
         for fileName in filesArray:
             if '.jpg' or '.JPG' in fileName:
                 imagesArray.append(fileName)
+
     except ValueError as ve:
-        return str(ve)
+        return f'이미지 불러오기 오류: {str(ve)}'
     except Exception as e:
-        return f'오류가 발생했습니다: {str(e)}'
+        return f'이미지 불러오기 오류.'
     
     # 3. 가져온 이미지를 HTML화 하기
     elements = ''
     for imageName in imagesArray:
         HTML_dir = f'/static/unyang4cut/{folderName}/RESIZED/{imageName}'
-        # element = f'<img class="img-fluid rounded mb-4 mb-lg-0" src="{HTML_dir}" alt="{imageName}" onclick="pushImage(this.src)"/>'
-        
         # 가져온 이미지들을 요소화 하기
         option = {
             'class': 'takenImages img-fluid rounded mb-4 mb-lg-0',
@@ -98,9 +97,7 @@ def getAllImages():
             'onclick': 'pushImage(this.src, this.alt)'
         }
         element = _inline_elementWrapper('img', option)
-
         elements = elements + element
-    # 4. 전송하기
 
     # 현재 폴더 표시용 버튼
     option = {
@@ -123,6 +120,8 @@ def getAllImages():
 
     backButton = _elementWrapper('div', indicator+btn, { 'class': 'd-flex p-2 justify-content-center' })
     elements = backButton + elements
+
+    # 4. 전송하기
     return elements
 
 @unyang4cut.route('/frames', methods = ['GET'])
@@ -135,7 +134,7 @@ def getAllFrames():
         with open(os.path.join(FRAME_DIR, 'FRAMES.json'), 'r', encoding='UTF-8') as json_file:
             framesData = json.load(json_file)
     except Exception as e:
-        return f'파일을 여는 중 오류가 발생했어요: {e}'
+        return f'프레임 정보를 가져오는 중에 오류가 발생했어요.'
     
     # 2. 각 프레임 html화 하기
     frameElements = []
@@ -170,10 +169,6 @@ def getAllFrames():
         }
         element = _elementWrapper('div', imageElement + nameElement, option)
         frameElements.append(element)
-        # 3. onclick시 js 함수 실행
-            # 1. frame 변수 이름 바꾸기
-            # 2. framePeeker에 보여지는 이미지 위치 바꾸기
-            # 3. json 파일 불러와서 각 프레임마다 이미지 위치 바꾸기 -> 말만 들어도 쉽진 않을 것 같다...
 
     finalElement = ''
     for frame in frameElements:
@@ -186,12 +181,14 @@ def getCollagedImage():
     getJson = request.args.get('json')
     collage = json.loads(getJson)
 
+    # 1. HTML 경로에서 PATH로 바꾸기
     selectedImageInfo = []
     for image in collage['images']:
         decoded_path = unquote(image['url'].split("/static/unyang4cut/")[-1])
         windows_path = os.path.join(*decoded_path.split("/"))
         selectedImageInfo.append({ 'dir': FOLDER_DIR + '\\' + windows_path, 'fileName': image['fileName'].replace('%20', ' ') })
 
+    # 2. PATH를 이용해서 이미지 합치기
     collagedImageName = _imageCollage(collage['frame'], selectedImageInfo)
 
     HTML_dir = f'/static/unyang4cut/COLLAGED/{collagedImageName}'
@@ -220,18 +217,33 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
         with open(JSON_PATH, 'r', encoding='UTF-8') as json_file:
             framesData = json.load(json_file)
     except Exception as e:
-        return f'파일을 여는 중 오류가 발생했어요: {e}'
+        return f'프레임 정보를 여는 중에 오류가 발생했어요.'
     
     # 1. 프레임 가져오기
-    for frame in framesData['FRAMES']:
-        if frame['NAME'] == frameName:
-            frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME'])).convert("RGBA")
-            selectedFrame = frame
-            if frame['IS_OVERLAYED'] == True:
-                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME'])).convert("RGBA")
+    try:
+        if frameName in framesData['FRAMES']:
+            selectedFrameInfo = framesData[framesData['FRAMES'].index(frameName)]
+            frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', selectedFrameInfo['FILE_NAME'])).convert("RGBA")
+            if selectedFrameInfo['IS_OVERLAYED']:
+                overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', selectedFrameInfo['OVERLAY_FILE_NAME'])).convert("RGBA")
             else:
                 overlayImage = frameImage
-            break
+        else:
+            ValueError(f'{frameName} 프레임을 찾을 수 없습니다.')
+    except ValueError as e:
+        return str(e)
+    except:
+        return '프레임을 여는 중에 오류가 발생했어요.'
+
+    # for frame in framesData['FRAMES']:
+    #     if frame['NAME'] == frameName:
+    #         frameImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['FILE_NAME'])).convert("RGBA")
+    #         selectedFrameInfo = frame
+    #         if frame['IS_OVERLAYED'] == True:
+    #             overlayImage = Image.open(os.path.join(FOLDER_DIR, 'FRAMES', frame['OVERLAY_FILE_NAME'])).convert("RGBA")
+    #         else:
+    #             overlayImage = frameImage
+    #         break
 
     # 2. 선택한 이미지 불러오기
     images = []
@@ -240,13 +252,18 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
             IMAGE_DIR = os.path.dirname(objectImage['dir'])
             images.append(Image.open(fp=os.path.join(IMAGE_DIR, objectImage['fileName'])).convert("RGBA"))
     except Exception as e:
-        return f'만드는 중에 오류가 발생했어요.'
+        return f'합칠 이미지를 가져오는 중에 오류가 발생했어요.'
 
-    for idx in range(0, selectedFrame['IMAGE']):
-        frameImage.paste(images[idx], (selectedFrame['POSITION'][idx]['POINT_X'], selectedFrame['POSITION'][idx]['POINT_Y']))
-    
-    # 이미지를 복사하여 overlayImage에 변경 적용
-    frameImage.alpha_composite(overlayImage, (0,0))
+    try:
+        # 3.2.5. 이미지 합성하기
+        for idx in range(0, selectedFrameInfo['IMAGE']):
+            frameImage.paste(images[idx], (selectedFrameInfo['POSITION'][idx]['POINT_X'], selectedFrameInfo['POSITION'][idx]['POINT_Y']))
+        
+        # 이미지를 복사하여 overlayImage에 변경 적용
+        frameImage.alpha_composite(overlayImage, (0,0))
+    except:
+        return '이미지를 만드는 중에 오류가 발생했어요.'
+
 
     # 3.5. 이미지 저장하기, 근데 중복이면 이름 바꾸기
     try:
