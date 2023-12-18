@@ -1,7 +1,5 @@
 env*
 
-*.json
-
 __pycache__
 
 .vscode

@@ -1,0 +1,223 @@
+{
+    "FRAMES": [
+        {
+            "NAME": "HANDWRITING",
+            "DISPLAY_NAME": "손글씨",
+            "FILE_NAME": "handwriting.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": false,
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "GUNGSEO1",
+            "DISPLAY_NAME": "궁서1",
+            "FILE_NAME": "gungseo1.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": false,
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "GUNGSEO2",
+            "DISPLAY_NAME": "궁서2",
+            "FILE_NAME": "gungseo2.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": false,
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "CHRISTMAS1",
+            "DISPLAY_NAME": "크리스마스1",
+            "FILE_NAME": "christmas1.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "christmas1_overlay.png",
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "CHRISTMAS2",
+            "DISPLAY_NAME": "크리스마스2",
+            "FILE_NAME": "christmas2.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "christmas2_overlay.png",
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "PASTEL1",
+            "DISPLAY_NAME": "파스텔1",
+            "FILE_NAME": "pastel1.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": false,
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "PASTEL2",
+            "DISPLAY_NAME": "파스텔2",
+            "FILE_NAME": "pastel2.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": false,
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        }
+    ]
+}
