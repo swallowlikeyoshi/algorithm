@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    body {
+        display: grid;
+        min-height: 100vh;
+    }
+</style>
 <div id="unyang4cut_registration" class="p-2 d-flex justify-content-center text-center flex-column">
-    <h1>운양네컷 등록</h1><br>
+    <h1>운양네컷 찍기</h1><br>
     <div class="p-2" style="width: 100%;">
-        <form hx-post="/photo/registration">
+        <div id="infoForm">
             <div class="form-floating mb-3">
                 <input type="name" class="form-control" id="name" name="name" placeholder="이름 혹은 학번">
                 <label for="floatingInput">이름 혹은 학번</label>
@@ -12,9 +18,10 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
                 <label for="floatingPassword">비밀번호</label>
             </div>
-            <input class="visually-hidden" name="IS_STARTING" type="checkbox" value="YES" checked>
-            <button class="btn btn-success" style="margin-top: 10px;">찍기 시작하기!</button>
-        </form>
+            <button class="btn btn-success" style="margin-top: 10px;" onclick="start()">촬영 시작하기!</button>
+        </div>
     </div>
 </div>
+
+<script src="/static/js/unyang4cut_registration.js"></script>
 {% endblock %}

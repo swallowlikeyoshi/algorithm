@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .scrollRemove::-webkit-scrollbar {
+        display: none;
+    }
+
+    .disabled {
+        display: none;
+        
+    }
+
+    .hide {
+        pointer-events: none;
+    }
+
+    .enabled {
+        display: block;
+        pointer-events: none;
+    }
+</style>
+<h1 class="display-3 p-3">운양네컷 꾸미기</h1>
+<div class="unyang4cut d-flex flex-row p-2" style="height: 100%">
+    <!-- 이미지 피커 -->
+    <div class="p-1 overflow-auto scrollRemove" id="imagePeeker" style="width: 50%; max-height: 100%">
+        <div class="justify-contents" id="box">
+            <div class="text-center card p-1" style="margin-bottom: 10px;">
+                <p>폴더를 선택해주세요.</p>
+                <p>처음 불러오는 경우,<br>시간이 조금 걸릴 수 있어요.</p>
+            </div>
+            <p hx-get="/photo/folders" hx-trigger="load">파일 불러오는중...</p>
+        </div>
+    </div>
+    <!-- 프레임 프리뷰 -->
+    <style>
+        .card {
+            position: relative;
+        }
+
+        #frameimage,
+        #overlayFrameImage {
+            position: absolute;
+        }
+    </style>
+    <div class="p-1" id="framePeeker" style="width: 50%">
+        <div class="frame" style="width: 100%">
+            <div class="card" id="box">
+                <img id="backgroundFrameImage" class="card-img" src="/static/unyang4cut/FRAMES/default.png" alt="frame"
+                    style="width: 100%; z-index: 1;" />
+                <div id="selectedImageViewer" class="card-img-overlay d-flex p-2 flex-column text-center align-middle"
+                    style="z-index: 2;">
+                    <div class="imageFrameContainer"
+                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="1번" onclick="popImage(this.alt)" />
+                        <p class="designator"></p>
+                    </div>
+                    <div class="imageFrameContainer"
+                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="2번" onclick="popImage(this.alt)" />
+                        <p class="designator"></p>
+                    </div>
+                    <div class="imageFrameContainer"
+                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="3번" onclick="popImage(this.alt)" />
+                        <p class="designator"></p>
+                    </div>
+                    <div class="imageFrameContainer"
+                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        <img class="disabled img-fluid imageFrame" src="#" alt="4번" onclick="popImage(this.alt)" />
+                        <p class="designator"></p>
+                    </div>
+                </div>
+                <img id="overlayFrameImage" src="/static/unyang4cut/FRAMES/clear.png" alt="frame"
+                    style="width: 100%; z-index: 3; pointer-events: none;" />
+            </div>
+        </div>
+        <!-- 버튼 -->
+        <div class="d-flex p-2 justify-content-around" id="frameSelector">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#frameModal"
+                hx-get="/photo/frames" hx-target="#frameList">프레임</button>
+            <button type="generate" id="generate" class="btn btn-success" hx-get="/photo/collage"
+                hx-include="[name='json']" hx-target="#collageLoading" hx-indicator="#indicator" data-bs-toggle="modal"
+                data-bs-target="#downloadModal">만들기</button>
+            <input class="visually-hidden" id="imageCollage" type="json" name="json" hx-get="/photo/collage"
+                hx-target="#result">
+        </div>
+    </div>
+    <!-- 프레임 선택 모달 -->
+    <div class="modal fade" id="frameModal" tabindex="-1" aria-labelledby="frameModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="frameModalLabel">프레임 선택</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="frameList">
+                    <p hx-get="/photo/frames">불러오는 중...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="frameModalClose">닫기</button>
+                    <button type="button" class="btn btn-primary">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 다운로드 모달 -->
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="downloadModalLable">다운로드</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"></button>
+                </div>
+                <div id="collageLoading">
+                    <div class="modal-body">
+                        <div id="result" class="d-flex justify-content-center text-center">
+                            <img id="indicator" class="htmx-indicator" src="/static/spinner.gif" /><br>
+                            <h5>제작중...</h5>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        닫기 버튼 클릭시 백엔드에서 result 요소를 통째로 다시 받아와서 치환함.
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"
+                            >닫기</button>
+                        <a href="#" id="downloadBtn" download>
+                            <button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button>
+                        </a>
+                        <button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 프레임 이미지 출처 -->
+<div id="sourceFacts" class="d-flex justify-content-center">
+    <div class="card p-2" style="width: 60%;">
+        <p class="text-center">프레임 이미지 출처</p>
+        <a
+            href="https://kr.freepik.com/free-photo/christmas-tree-with-lights-blurred_10588297.htm#query=christmas&position=0&from_view=search&track=sph&uuid=d36fc87b-497c-4dfc-9899-6be75eed6786">작가
+            kbza</a> 출처 Freepik
+        <a
+            href="https://www.freepik.com/free-vector/colorful-acrylic-brush-strokes-vector_17433759.htm#query=oil%20painting&position=4&from_view=search&track=ais&uuid=c0f512a3-2afe-4beb-bb63-11467541eba4">Image
+            by rawpixel.com</a> on Freepik
+        <a
+            href="https://www.freepik.com/free-vector/abstract-painted-brush-strokes-background_5073848.htm#query=oil%20painting&position=19&from_view=search&track=ais&uuid=c0f512a3-2afe-4beb-bb63-11467541eba4">Image
+            by pikisuperstar</a> on Freepik
+    </div>
+</div>
+<script src="/static/js/unyang4cut.js"></script>
+<script>
+    window.onload = function () {
+        var leftDiv = document.getElementById('imagePeeker');
+        var rightDiv = document.getElementById('framePeeker');
+
+        // 프레임 프리뷰 div의 높이 가져오기
+        var rightDivHeight = rightDiv.clientHeight;
+
+        // 이미지 피커 div에 높이 적용
+        leftDiv.style.height = rightDivHeight + 'px';
+    };
+</script>
+
+{% endblock %}

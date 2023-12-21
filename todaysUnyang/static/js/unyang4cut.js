@@ -5,6 +5,7 @@ let folderName = ''
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
 let isFrameSelected = false
 
+
 function startUp() {
     takenImageArray = document.querySelectorAll('.takenImages')
     if (takenImageArray) {
@@ -15,8 +16,48 @@ function startUp() {
     }
 }
 
-function setFolderName(currentFolderName) {
-    folderName = currentFolderName
+// function setFolderName(currentFolderName) {
+//     folderName = currentFolderName
+// }
+
+async function openFolder(reqFolderName) {
+
+    password = prompt('폴더 비밀번호를 입력해주세요.', undefined)
+    if (password == '' || password == undefined) {
+        return
+    }
+
+    queryParams = {
+        'NAME': reqFolderName,
+        'PASSWORD': password
+    }
+    
+    const isPasswordCorrect = await httpRequest('/photo/password', 'POST', {}, queryParams);
+
+    isPasswordCorrectObject = JSON.parse(isPasswordCorrect)
+    console.log(isPasswordCorrect)
+
+    if (isPasswordCorrectObject['IS_TRIUMPH']) {
+        if (isPasswordCorrectObject['IS_PASSWORD_CORRECT']) {
+            // 성공
+            folderName = reqFolderName
+            queryParams = {
+                'file_name': reqFolderName
+            }
+            const imagesElement = await httpRequest('/photo/images', 'GET', {}, queryParams)
+
+            boxElement = document.getElementById('box')
+            replaceContent(imagesElement, boxElement)
+        }
+        else {
+            // 비밀번호 틀림
+            alert('비밀번호가 틀립니다.')
+            return
+        }
+    } else {
+        // DB 에러
+        alert('DB 에러입니다. ' + isPasswordCorrectObject['CONTENT'])
+    }
 }
 
 function pushImage(pushedImageSrc, pushedImageName) {
@@ -84,7 +125,9 @@ function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
     overlayImageElement.src = overlayFrameSrc
     frameModalCloseBtn = document.getElementById('frameModalClose').click()
 
-    startUp()
+    if (!isFrameSelected) {
+        startUp()
+    }
 }
 
 function downloadFile(url, fileName) {
@@ -139,4 +182,58 @@ function downloadAllFiles() {
         .catch(error => {
             console.error(`Error downloading files: ${error.message}`);
         });
+}
+
+function httpRequest(url, method, header, params) {
+    let options = {
+        method: method,
+        headers: header || {},  // Ensure headers is defined
+    };
+
+    // Append query parameters for GET requests
+    if (method.toUpperCase() === 'GET' && params) {
+        const queryString = Object.keys(params)
+            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+            .join('&');
+        url += `?${queryString}`;
+    } else if (params) {
+        // For other methods (e.g., POST), include params in the request body
+        options = {
+            method: method,
+            body: JSON.stringify(params),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        fetch(url, options)
+            .then(response => {
+                if (!response.ok) {
+                    reject(new Error(`HTTP error! Status: ${response.status}`));
+                }
+                return response.text();  // or response.json() if the response is JSON
+            })
+            .then(data => {
+                resolve(data);
+            })
+            .catch(error => {
+                reject(error);
+            });
+    });
+}
+
+
+function replaceContent(newContent, container) {
+    // Simulate an asynchronous operation
+        // // New content to replace the existing content
+        // const newContent = '<p>This is the new content after replacement.</p>';
+
+        // // Find the container element
+        // const container = document.getElementById('container');
+
+        // Replace the content of the container with the new content
+    container.innerHTML = newContent;
+     // Simulating a delay of 1 second (you can remove this in a real scenario)
 }
