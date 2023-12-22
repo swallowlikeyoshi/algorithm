@@ -1,38 +1,6 @@
 {
-	"mealServiceDietInfo": [
-		{
-			"head": [
-				{
-					"list_total_count": 1
-				},
-				{
-					"RESULT": {
-						"CODE": "INFO-000",
-						"MESSAGE": "\uc815\uc0c1 \ucc98\ub9ac\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
-					}
-				}
-			]
-		},
-		{
-			"row": [
-				{
-					"ATPT_OFCDC_SC_CODE": "J10",
-					"ATPT_OFCDC_SC_NM": "\uacbd\uae30\ub3c4\uad50\uc721\uccad",
-					"SD_SCHUL_CODE": "7531103",
-					"SCHUL_NM": "\uc6b4\uc591\uace0\ub4f1\ud559\uad50",
-					"MMEAL_SC_CODE": "2",
-					"MMEAL_SC_NM": "\uc911\uc2dd",
-					"MLSV_YMD": "20231222",
-					"MLSV_FGR": 1000.0,
-					"DDISH_NM": "\ubbf8\ud2b8\uc2a4\ud30c\uac8c\ud2f0(\ubd80\ucc2c) (1.2.5.6.10.12.13.16)<br/>\ud06c\ub9ac\uc2a4\ub9c8\uc2a4\ub808\ub4dc\ub864\ucf00\uc774\ud06c (1.2.5.6)<br/>\uc591\uc1a1\uc774\ud06c\ub9bc\uc2a4\ud504 (2.5.6.13.16)<br/>\uac10\uc790\uc0d0\ub7ec\ub4dc (1.5.6.8.13)<br/>\ub3c8\ub9c8\ud638\ud06c&\uc57c\ucc44\uad6c\uc774 (1.5.6.10.12.13)<br/>\uae4d\ub450\uae30 (9)",
-					"ORPLC_INFO": "\uc1e0\uace0\uae30(\uc885\ub958) : \uad6d\ub0b4\uc0b0(\ud55c\uc6b0)<br/>\uc1e0\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\ub3fc\uc9c0\uace0\uae30 : \uad6d\ub0b4\uc0b0<br/>\ub3fc\uc9c0\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\ub2ed\uace0\uae30 : \uad6d\ub0b4\uc0b0<br/>\ub2ed\uace0\uae30 \uc2dd\uc721\uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\uc624\ub9ac\uace0\uae30 : \uad6d\ub0b4\uc0b0<br/>\uc624\ub9ac\uace0\uae30 \uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\uc300 : \uad6d\ub0b4\uc0b0<br/>\ubc30\ucd94 : \uad6d\ub0b4\uc0b0<br/>\uace0\ucda7\uac00\ub8e8 : \uad6d\ub0b4\uc0b0<br/>\ucf69 : \uad6d\ub0b4\uc0b0<br/>\ucf69 \uac00\uacf5\ud488 : \uad6d\ub0b4\uc0b0<br/>\ub099\uc9c0 : \uc911\uad6d\uc0b0<br/>\uc624\uc9d5\uc5b4 : \uad6d\ub0b4\uc0b0<br/>\uaf43\uac8c : \uad6d\ub0b4\uc0b0<br/>\ub2e4\ub791\uc5b4 \uc218\uc0b0\uac00\uacf5\ud488 : \uc6d0\uc591\uc0b0<br/>\uc8fc\uafb8\ubbf8 : \ubca0\ud2b8\ub0a8<br/>\ube44\uace0 : ",
-					"CAL_INFO": "1440.2 Kcal",
-					"NTR_INFO": "\ud0c4\uc218\ud654\ubb3c(g) : 87.7<br/>\ub2e8\ubc31\uc9c8(g) : 61.5<br/>\uc9c0\ubc29(g) : 90.3<br/>\ube44\ud0c0\ubbfcA(R.E) : 231.2<br/>\ud2f0\uc544\ubbfc(mg) : 1.6<br/>\ub9ac\ubcf4\ud50c\ub77c\ube48(mg) : 1.5<br/>\ube44\ud0c0\ubbfcC(mg) : 24.8<br/>\uce7c\uc298(mg) : 1897.0<br/>\ucca0\ubd84(mg) : 4.2",
-					"MLSV_FROM_YMD": "20231222",
-					"MLSV_TO_YMD": "20231222",
-					"LOAD_DTM": "20231221"
-				}
-			]
-		}
-	]
+	"RESULT": {
+		"CODE": "INFO-200",
+		"MESSAGE": "\ud574\ub2f9\ud558\ub294 \ub370\uc774\ud130\uac00 \uc5c6\uc2b5\ub2c8\ub2e4."
+	}
 }
