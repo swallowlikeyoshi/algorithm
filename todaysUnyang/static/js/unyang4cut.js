@@ -5,6 +5,38 @@ let folderName = ''
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
 let isFrameSelected = false
 
+window.onload = sizeReload()
+window.onresize = sizeReload()
+
+function sizeReload() {
+    var leftDiv = document.getElementById('imagePeeker');
+    var rightDiv = document.getElementById('framePeeker');
+
+    // 프레임 프리뷰 div의 높이 가져오기
+    var rightDivHeight = rightDiv.clientHeight;
+
+    // 이미지 피커 div에 높이 적용
+    leftDiv.style.height = rightDivHeight + 'px';
+
+    var framePeekerWidth = document.getElementById('selectedImageViewer').clientWidth;
+    var calculatedMargin = framePeekerWidth * (50 / 1000);
+    var calculatedWidth = framePeekerWidth * (900 / 1000);
+    var calculatedHeight = calculatedWidth * (2 / 3)
+    var imageContainerList = document.querySelectorAll('.imageFrameContainer');
+
+    count = 1
+    imgCount = 0
+    for (const imageContainer of imageContainerList) {
+        imageContainer.style.position = 'absolute';
+        // 픽셀 값을 명시적으로 지정하고, 단위를 'px'로 사용합니다.
+        var newWidth = framePeekerWidth - (2 * calculatedMargin) + 'px';
+        imageContainer.style.width = newWidth;
+        imageContainer.style.left = calculatedMargin + 'px';
+        imageContainer.style.top = calculatedMargin * count + (calculatedHeight * imgCount) + 'px';
+        count++
+        imgCount++
+    }
+};
 
 function startUp() {
     takenImageArray = document.querySelectorAll('.takenImages')
@@ -16,9 +48,15 @@ function startUp() {
     }
 }
 
-// function setFolderName(currentFolderName) {
-//     folderName = currentFolderName
-// }
+async function getFolderList() {
+    const folders = await httpRequest('/photo/folders', 'GET', '', {})
+    var boxElement = document.getElementById('box')
+    replaceContent(folders, boxElement)
+}
+
+function setFolderName(currentFolderName) {
+    folderName = currentFolderName
+}
 
 async function openFolder(reqFolderName) {
 
@@ -48,6 +86,12 @@ async function openFolder(reqFolderName) {
 
             boxElement = document.getElementById('box')
             replaceContent(imagesElement, boxElement)
+
+            // imagePeeker 상단 버튼이 항상 위에 고정되기 위해...
+            var takenImagePeekerElement = document.getElementById('takenImagePeeker')
+            var imagePeekerElement = document.getElementById('imagePeeker')
+            var controlBtnElement = document.getElementById('controlBtn')
+            takenImagePeekerElement.style.height = (imagePeekerElement.clientHeight - controlBtnElement.clientHeight) + 'px';
         }
         else {
             // 비밀번호 틀림
@@ -82,6 +126,10 @@ function pushImage(pushedImageSrc, pushedImageName) {
     image.classList.remove('disabled')
     p.classList.add('disabled')
 
+    refreshImageList()
+}
+
+function refreshImageList() {
     let collage = {
         'frame': frame,
         'folderName': folderName,
@@ -113,21 +161,26 @@ function download() {
 }
 
 function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
-    console.log(selectedFrameSrc)
-    console.log(selectedFrameName)
-    console.log(overlayFrameSrc)
+    console.log('선택된 프레임: ' + selectedFrameName)
 
     frame = selectedFrameName
+
     frameImageElement = document.getElementById('backgroundFrameImage')
     frameImageElement.src = selectedFrameSrc
     frameImageElement.alt = selectedFrameName
+
     overlayImageElement = document.getElementById('overlayFrameImage')
     overlayImageElement.src = overlayFrameSrc
+
     frameModalCloseBtn = document.getElementById('frameModalClose').click()
+
+    console.log('현재 프레임: ' + frame)
 
     if (!isFrameSelected) {
         startUp()
     }
+
+    refreshImageList()
 }
 
 function downloadFile(url, fileName) {
