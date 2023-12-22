@@ -118,7 +118,7 @@ def isPasswordCorrect():
     except Exception as e:
         return json.dumps({"IS_TRIUMPH": True, "IS_PASSWORD_CORRECT": False})
 
-    
+
 
 
 @unyang4cut.route("/folders", methods=["GET"])
@@ -222,15 +222,16 @@ def getAllImages():
     option = {
         "type": "button",
         "class": "btn btn-secondary",
-        "hx-get": "/photo/folders",
-        "hx-target": "#box",
+        # "hx-get": "/photo/folders",
+        # "hx-target": "#box",
+        "onclick": "getFolderList()"
     }
     btn = _elementWrapper("button", "뒤로 가기", option)
 
     backButton = _elementWrapper(
-        "div", indicator + btn, {"class": "d-flex p-2 justify-content-center"}
+        "div", indicator + btn, { "class": "d-flex p-2 justify-content-around", 'id': 'controlBtn' }
     )
-    elements = backButton + elements
+    elements = backButton + _elementWrapper('div', elements, { 'class': 'overflow-auto scrollRemove', 'id': 'takenImagePeeker' })
 
     # 4. 전송하기
     return elements

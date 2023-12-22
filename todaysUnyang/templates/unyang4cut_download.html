@@ -8,7 +8,7 @@
 
     .disabled {
         display: none;
-        
+
     }
 
     .hide {
@@ -23,11 +23,13 @@
 <h1 class="display-3 p-3">운양네컷 꾸미기</h1>
 <div class="unyang4cut d-flex flex-row p-2" style="height: 100%">
     <!-- 이미지 피커 -->
-    <div class="p-1 overflow-auto scrollRemove" id="imagePeeker" style="width: 50%; max-height: 100%">
+    <div class="p-1" id="imagePeeker" style="width: 50%; max-height: 100%">
         <div class="justify-contents" id="box">
-            <div class="text-center card p-1" style="margin-bottom: 10px;">
-                <p>폴더를 선택해주세요.</p>
-                <p>처음 불러오는 경우,<br>시간이 조금 걸릴 수 있어요.</p>
+            <div class="card" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>1. 사진 불러오기</strong></h5>
+                    <p class="card-text">등록한 이름과 같은 폴더를 선택해주세요.<br>사진이 많거나 처음 불러오는 경우, 시간이 조금 걸릴 수 있어요.</p>
+                </div>
             </div>
             <p hx-get="/photo/folders" hx-trigger="load">파일 불러오는중...</p>
         </div>
@@ -39,7 +41,8 @@
         }
 
         #frameimage,
-        #overlayFrameImage {
+        #overlayFrameImage,
+        #imageFrameContainer {
             position: absolute;
         }
     </style>
@@ -48,31 +51,33 @@
             <div class="card" id="box">
                 <img id="backgroundFrameImage" class="card-img" src="/static/unyang4cut/FRAMES/default.png" alt="frame"
                     style="width: 100%; z-index: 1;" />
-                <div id="selectedImageViewer" class="card-img-overlay d-flex p-2 flex-column text-center align-middle"
-                    style="z-index: 2;">
+                    
+                <div id="selectedImageViewer" class="card-img-overlay"
+                    style="z-index: 2; position: absolute; padding: 0px;">
                     <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        style="aspect-ratio: 3/2; color: white; ">
                         <img class="disabled img-fluid imageFrame" src="#" alt="1번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
                     <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        style="width: 100%; aspect-ratio: 3/2; color: white;">
                         <img class="disabled img-fluid imageFrame" src="#" alt="2번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
                     <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        style="width: 100%; aspect-ratio: 3/2; color: white;">
                         <img class="disabled img-fluid imageFrame" src="#" alt="3번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
                     <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; margin-bottom: 8px; color: white;">
+                        style="width: 100%; aspect-ratio: 3/2; color: white;">
                         <img class="disabled img-fluid imageFrame" src="#" alt="4번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
                 </div>
+
                 <img id="overlayFrameImage" src="/static/unyang4cut/FRAMES/clear.png" alt="frame"
-                    style="width: 100%; z-index: 3; pointer-events: none;" />
+                    style="width: 100%; z-index: 3; pointer-events: none; opacity: 0" />
             </div>
         </div>
         <!-- 버튼 -->
@@ -111,7 +116,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="downloadModalLable">다운로드</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        hx-get="/photo/closeDownloadModal" hx-target="#collageLoading"></button>
                 </div>
                 <div id="collageLoading">
                     <div class="modal-body">
@@ -150,17 +156,5 @@
     </div>
 </div>
 <script src="/static/js/unyang4cut.js"></script>
-<script>
-    window.onload = function () {
-        var leftDiv = document.getElementById('imagePeeker');
-        var rightDiv = document.getElementById('framePeeker');
-
-        // 프레임 프리뷰 div의 높이 가져오기
-        var rightDivHeight = rightDiv.clientHeight;
-
-        // 이미지 피커 div에 높이 적용
-        leftDiv.style.height = rightDivHeight + 'px';
-    };
-</script>
 
 {% endblock %}

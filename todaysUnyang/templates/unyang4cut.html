@@ -6,17 +6,26 @@
         min-height: 100vh;
     }
 </style>
-<div id="unyang4cut_select" class="p-2 d-flex flex-row justify-content-around">
-    <div class="text-center d-flex flex-column justify-content-around" style="width: 60%;">
-        <h1>운양네컷</h1>
-        <div id="registration_panel" class="card p-2 text-center">
+<div id="unyang4cut_select" class="p-2 d-flex flex-column justify-content-center">
+    <div class="p-2 text-center align-self-center" style="width: 100%;">
+        <h1>운양네컷 사용법</h1>
+        <br>
+        <dl class="row align-self-center">
+            <dt class="col-sm-3">1. 사진 찍기</dt>
+            <dd class="col-sm-9">컴퓨터실에서 인생네컷을 찍는다.</dd>
+
+            <dt class="col-sm-3">2. 사진 꾸미기</dt>
+            <dd class="col-sm-9">사진을 선택하고 저장한다.</dd>
+        </dl>
+    </div>
+    <div class="text-center align-self-center" style="width: 60%;">
+
+        <!-- <div id="registration_panel" class="card p-2 text-center">
             <p>사진을 찍고싶다면</p>
             <a id="registrationBtn" class="btn btn-success" href="/photo/registration">사진 찍으러 가기</a>
-        </div>
-        <div id="download_panel" class="card p-2 text-center">
-            <p>사진을 찾고싶다면</p>
-            <a id="downloadBtn" class="btn btn-primary" href="/photo/download">사진 꾸미러 가기</a>
-        </div>
+        </div> -->
+        <p><strong>사진을 찍었다면,</strong></p>
+        <a id="downloadBtn" class="btn btn-primary" href="/photo/download">꾸미러 가기</a>
     </div>
 </div>
 {% endblock %}
