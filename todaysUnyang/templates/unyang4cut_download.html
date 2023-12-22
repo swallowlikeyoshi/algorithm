@@ -25,7 +25,7 @@
     <!-- 이미지 피커 -->
     <div class="p-1" id="imagePeeker" style="width: 50%; max-height: 100%">
         <div class="justify-contents" id="box">
-            <div class="card" style="margin-bottom: 10px;">
+            <div class="card border border-primary" style="margin-bottom: 10px;">
                 <div class="card-body">
                     <h5 class="card-title"><strong>1. 사진 불러오기</strong></h5>
                     <p class="card-text">등록한 이름과 같은 폴더를 선택해주세요.<br>사진이 많거나 처음 불러오는 경우, 시간이 조금 걸릴 수 있어요.</p>
@@ -42,7 +42,8 @@
 
         #frameimage,
         #overlayFrameImage,
-        #imageFrameContainer {
+        #imageFrameContainer,
+        #frameInfo {
             position: absolute;
         }
     </style>
@@ -51,33 +52,32 @@
             <div class="card" id="box">
                 <img id="backgroundFrameImage" class="card-img" src="/static/unyang4cut/FRAMES/default.png" alt="frame"
                     style="width: 100%; z-index: 1;" />
-                    
-                <div id="selectedImageViewer" class="card-img-overlay"
-                    style="z-index: 2; position: absolute; padding: 0px;">
-                    <div class="imageFrameContainer"
-                        style="aspect-ratio: 3/2; color: white; ">
-                        <img class="disabled img-fluid imageFrame" src="#" alt="1번" onclick="popImage(this.alt)" />
+                <div id="selectedImageViewer" class="card-img-overlay" style="z-index: 2; position: absolute; padding: 0px;">
+                    <div class="imageFrameContainer" style="aspect-ratio: 3/2; color: white; ">
+                        <img class="disabled img-fluid imageFrame" alt="1번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
-                    <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; color: white;">
-                        <img class="disabled img-fluid imageFrame" src="#" alt="2번" onclick="popImage(this.alt)" />
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; color: white;">
+                        <img class="disabled img-fluid imageFrame" alt="2번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
-                    <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; color: white;">
-                        <img class="disabled img-fluid imageFrame" src="#" alt="3번" onclick="popImage(this.alt)" />
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; color: white;">
+                        <img class="disabled img-fluid imageFrame" alt="3번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
-                    <div class="imageFrameContainer"
-                        style="width: 100%; aspect-ratio: 3/2; color: white;">
-                        <img class="disabled img-fluid imageFrame" src="#" alt="4번" onclick="popImage(this.alt)" />
+                    <div class="imageFrameContainer" style="width: 100%; aspect-ratio: 3/2; color: white;">
+                        <img class="disabled img-fluid imageFrame" alt="4번" onclick="popImage(this.alt)" />
                         <p class="designator"></p>
                     </div>
                 </div>
-
                 <img id="overlayFrameImage" src="/static/unyang4cut/FRAMES/clear.png" alt="frame"
-                    style="width: 100%; z-index: 3; pointer-events: none; opacity: 0" />
+                    style="width: 100%; z-index: 3; pointer-events: none;" />
+                <div id="frameInfo" class="card visually-hidden border border-primary" style="z-index: 4; bottom: 0%;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>2. 프레임 선택하기</strong></h5>
+                        <p class="card-text">'프레임' 버튼을 눌러 프레임을 선택할 수 있어요.</p>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- 버튼 -->

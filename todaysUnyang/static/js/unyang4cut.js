@@ -5,8 +5,13 @@ let folderName = ''
 var imageFrameContainer = document.querySelectorAll('.imageFrameContainer')
 let isFrameSelected = false
 
-window.onload = sizeReload()
-window.onresize = sizeReload()
+window.onload = function() {
+    sizeReload();
+};
+
+window.onresize = function() {
+    sizeReload();
+};
 
 function sizeReload() {
     var leftDiv = document.getElementById('imagePeeker');
@@ -38,6 +43,7 @@ function sizeReload() {
     }
 };
 
+
 function startUp() {
     takenImageArray = document.querySelectorAll('.takenImages')
     if (takenImageArray) {
@@ -54,13 +60,21 @@ async function getFolderList() {
     replaceContent(folders, boxElement)
 }
 
-function setFolderName(currentFolderName) {
-    folderName = currentFolderName
+function showFrameInfo(status) {
+    if (!isFrameSelected) {
+        var frameInfoElement = document.getElementById('frameInfo')
+
+        if (status) {
+            frameInfoElement.classList.remove('visually-hidden')
+        } else {
+            frameInfoElement.classList.add('visually-hidden')
+        }
+    }
 }
 
 async function openFolder(reqFolderName) {
 
-    password = prompt('폴더 비밀번호를 입력해주세요.', undefined)
+    password = prompt("'" + reqFolderName + "' 폴더 비밀번호를 입력해주세요.", undefined)
     if (password == '' || password == undefined) {
         return
     }
@@ -92,6 +106,8 @@ async function openFolder(reqFolderName) {
             var imagePeekerElement = document.getElementById('imagePeeker')
             var controlBtnElement = document.getElementById('controlBtn')
             takenImagePeekerElement.style.height = (imagePeekerElement.clientHeight - controlBtnElement.clientHeight) + 'px';
+        
+            showFrameInfo(true)
         }
         else {
             // 비밀번호 틀림
@@ -162,6 +178,8 @@ function download() {
 
 function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
     console.log('선택된 프레임: ' + selectedFrameName)
+
+    showFrameInfo(false)
 
     frame = selectedFrameName
 

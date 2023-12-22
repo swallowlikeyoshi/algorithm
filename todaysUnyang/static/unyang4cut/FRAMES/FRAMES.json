@@ -162,7 +162,8 @@
             "DISPLAY_NAME": "파스텔1",
             "FILE_NAME": "pastel1.png",
             "IMAGE": 4,
-            "IS_OVERLAYED": false,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "pastel1_overlay.png",
             "WIDTH": 1000,
             "HEIGHT": 3000,
             "POSITION": [
@@ -193,7 +194,8 @@
             "DISPLAY_NAME": "파스텔2",
             "FILE_NAME": "pastel2.png",
             "IMAGE": 4,
-            "IS_OVERLAYED": false,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "pastel2_overlay.png",
             "WIDTH": 1000,
             "HEIGHT": 3000,
             "POSITION": [

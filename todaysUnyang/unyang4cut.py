@@ -12,7 +12,7 @@ from todaysUnyang import BASE_DIR
 # wand 라이브러리는 쓰려면 뭘 또 깔아야함... 젠장
 # from wand.image import Image
 # 차라리 다른 라이브러리를 쓰는게 낫지 https://wikidocs.net/153080
-from PIL import Image
+from PIL import Image, ExifTags
 
 unyang4cut = Blueprint("photo", __name__, url_prefix="/photo")
 FOLDER_DIR = os.path.join(BASE_DIR, "static", "unyang4cut")
@@ -105,20 +105,18 @@ def isPasswordCorrect():
     try:
         queriedUserPassword = _DB_excute(
             "SELECT DISTINCT password FROM unyang4cutLogs WHERE name = ? ORDER BY time DESC LIMIT 1",
-            (postParmas["NAME"], ),
+            (postParmas["NAME"],),
         )
 
         if str(queriedUserPassword[0][0]) == str(postParmas["PASSWORD"]):
             return json.dumps({"IS_TRIUMPH": True, "IS_PASSWORD_CORRECT": True})
         else:
-            raise('비밀번호가 틀립니다.')
-        
+            raise ("비밀번호가 틀립니다.")
+
     except sqlite3.OperationalError as op:
         return json.dumps({"IS_TRIUMPH": False, "CONTENT": str(op)})
     except Exception as e:
         return json.dumps({"IS_TRIUMPH": True, "IS_PASSWORD_CORRECT": False})
-
-
 
 
 @unyang4cut.route("/folders", methods=["GET"])
@@ -209,13 +207,7 @@ def getAllImages():
         elements = elements + element
 
     # 현재 폴더 표시용 버튼
-    option = {
-        "type": "button",
-        "class": "btn btn-primary",
-        "id": "indicator",
-        "onload": "setFolderName(this.alt)",
-        "alt": folderName,
-    }
+    option = {"type": "button", "class": "btn btn-primary", "id": "indicator"}
     indicator = _elementWrapper("button", folderName, option)
 
     # 뒤로가기 버튼
@@ -224,14 +216,20 @@ def getAllImages():
         "class": "btn btn-secondary",
         # "hx-get": "/photo/folders",
         # "hx-target": "#box",
-        "onclick": "getFolderList()"
+        "onclick": "getFolderList()",
     }
     btn = _elementWrapper("button", "뒤로 가기", option)
 
     backButton = _elementWrapper(
-        "div", indicator + btn, { "class": "d-flex p-2 justify-content-around", 'id': 'controlBtn' }
+        "div",
+        indicator + btn,
+        {"class": "d-flex p-2 justify-content-around", "id": "controlBtn"},
     )
-    elements = backButton + _elementWrapper('div', elements, { 'class': 'overflow-auto scrollRemove', 'id': 'takenImagePeeker' })
+    elements = backButton + _elementWrapper(
+        "div",
+        elements,
+        {"class": "overflow-auto scrollRemove", "id": "takenImagePeeker"},
+    )
 
     # 4. 전송하기
     return elements
@@ -419,8 +417,19 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
 
         # 이미지를 복사하여 overlayImage에 변경 적용
         frameImage.alpha_composite(overlayImage, (0, 0))
-    except:
-        return "이미지를 만드는 중에 오류가 발생했어요."
+
+        # alpha. EXIF 추가하기
+        exif_data = frameImage.info.get("exif", {})
+
+        new_exif_data = {
+            ExifTags.TAGS[271]: "YourMake"
+            # 추가적인 EXIF 태그 및 값은 필요에 따라 추가할 수 있습니다.
+        }
+
+        exif_data.update(new_exif_data)
+
+    except Exception as e:
+        return f"이미지를 만드는 중에 오류가 발생했어요. {e}"
 
     # 3.5. 이미지 저장하기, 근데 중복이면 이름 바꾸기
     try:
@@ -428,7 +437,7 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
     except:
         pass
     imagesArray = os.listdir(FOLDER_DIR + "\\COLLAGED")
-    frameImage.save(f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png")
+    frameImage.save(f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png", exif=exif_data)
     return f"{len(imagesArray)}.png"
 
 
@@ -481,7 +490,7 @@ def _inline_elementWrapper(tag: str, option: dict):
 def _shootingLog(name: str, password: str, time: datetime, status: str):
     _DB_excute(
         "INSERT INTO unyang4cutLogs (name, password, time, status) VALUES (?, ?, ?, ?)",
-        [name, password, time, status]
+        [name, password, time, status],
     )
     return
 
