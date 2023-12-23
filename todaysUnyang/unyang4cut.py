@@ -13,6 +13,7 @@ from todaysUnyang import BASE_DIR
 # from wand.image import Image
 # 차라리 다른 라이브러리를 쓰는게 낫지 https://wikidocs.net/153080
 from PIL import Image, ExifTags
+from todaysUnyang import exif
 
 unyang4cut = Blueprint("photo", __name__, url_prefix="/photo")
 FOLDER_DIR = os.path.join(BASE_DIR, "static", "unyang4cut")
@@ -417,17 +418,6 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
 
         # 이미지를 복사하여 overlayImage에 변경 적용
         frameImage.alpha_composite(overlayImage, (0, 0))
-
-        # alpha. EXIF 추가하기
-        exif_data = frameImage.info.get("exif", {})
-
-        new_exif_data = {
-            ExifTags.TAGS[271]: "YourMake"
-            # 추가적인 EXIF 태그 및 값은 필요에 따라 추가할 수 있습니다.
-        }
-
-        exif_data.update(new_exif_data)
-
     except Exception as e:
         return f"이미지를 만드는 중에 오류가 발생했어요. {e}"
 
@@ -437,8 +427,11 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
     except:
         pass
     imagesArray = os.listdir(FOLDER_DIR + "\\COLLAGED")
-    frameImage.save(f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png", exif=exif_data)
-    return f"{len(imagesArray)}.png"
+    # alpha. EXIF 추가하기
+        # frameImage.save(f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png", exif=exif_data)
+    exif.add_exif_and_save(frameImage, f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.jpg")
+
+    return f"{len(imagesArray)}.jpg"
 
 
 # GPT
