@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # 이미지 파일 경로
     exif_data_image_path = "E:\\OneDrive\\Algorithm\\Front end\\todaysUnyang\\todaysUnyang\\static\\20231122_153331.jpg"
     image_path = "E:\\OneDrive\\Algorithm\\Front end\\todaysUnyang\\todaysUnyang\\static\\unyang4cut\\COLLAGED\\33.png"
-
+    path_100 = "E:\\OneDrive\\자료 및 출력\\김도현_첫돌사진_070707\\CRW_3175-DPP.JPG"
     # img = Image.open(exif_data_image_path)
     # exif_dict = piexif.load(img.info["exif"])
     # targetImg = Image.open(image_path)
@@ -45,7 +45,9 @@ if __name__ == '__main__':
 
     # new_exif = exif_key_name_converter(exif_dict)
 
-    from exif_data_original import exif_data_changed
+    # from exif_data_original import exif_data_changed
 
-    image = Image.open(image_path)
-    save_exif(image, image_path.replace('.png', '.jpg'), exif_data_changed)
+    # image = Image.open(image_path)
+    # save_exif(image, image_path.replace('.png', '.jpg'), exif_data_changed)
+
+    print(get_exif(Image.open(path_100)))
