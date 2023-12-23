@@ -87,7 +87,7 @@ def registration():
             return json.dumps(returnElement)
 
         elif queryParams["TYPE"] == "IS_DUPLICATED":
-            nameList = _DB_excute("SELECT DISTINCT name FROM unyang4cutLogs;", {})
+            nameList = os.listdir(FOLDER_DIR)
             if session["NAME"] in nameList:
                 return json.dumps({"IS_DUPLICATED": True})
             else:
@@ -160,7 +160,7 @@ def getAllFiles():
 
     # 3. 전송하기
     elements = _elementWrapper(
-        "div", elements, {"class": "d-flex flex-column justify-content-around"}
+        "div", elements, {"class": "d-flex flex-column justify-content-around overflow-scroll scrollRemove"}
     )
     return elements
 

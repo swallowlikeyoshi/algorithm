@@ -1,3 +1,6 @@
+from datetime import datetime
+from todaysUnyang import env
+
 COORDINATE= {
     1: b"N",
     2: ((37, 1), (38, 1), (41343360, 1000000)),
@@ -7,10 +10,13 @@ COORDINATE= {
     6: (42, 1),
 }
 
-IMAGE_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+IMAGE_DESCRIPTION = env.special_message
 
 def encoder(string):
     return string.encode('utf-8')
+
+def timeNow():
+    return encoder(str(datetime.now().strftime('%Y:%m:%d %H:%M:%S')))
 
 exif_data_original = {
     "0th": {
@@ -94,15 +100,20 @@ exif_data_changed = {
         # ImageDescription
         270: encoder(IMAGE_DESCRIPTION),
         # Artist
-        315: encoder("2023 운양고등학교 알고리즘 동아리"),
+        315: encoder("김도현"),
         # Orientation
         274: 1,
         # Software
-        305: encoder("김도현"),
+        305: encoder("2023 운양고등학교 알고리즘 동아리"),
         # DateTime
-        306: b'2023/123/123',
+        306: timeNow(),
         # GPSTag
         34853: 732,
+    },
+    "Exif": {
+        36864: b"0220",
+        36867: timeNow(),
+        36868: timeNow(),
     },
     "GPS": COORDINATE,
     "Interop": {},

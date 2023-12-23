@@ -15,3 +15,5 @@ __pycache__
 /unyang4cut
 
 *.jpg
+
+env.py
