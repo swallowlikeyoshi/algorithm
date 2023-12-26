@@ -160,7 +160,7 @@ def getAllFiles():
 
     # 3. 전송하기
     elements = _elementWrapper(
-        "div", elements, {"class": "d-flex flex-column justify-content-around overflow-scroll scrollRemove"}
+        "div", elements, {'id': 'imageList', "class": "d-flex flex-column justify-content-top overflow-scroll scrollRemove"}
     )
     return elements
 
@@ -229,7 +229,7 @@ def getAllImages():
     elements = backButton + _elementWrapper(
         "div",
         elements,
-        {"class": "overflow-auto scrollRemove", "id": "takenImagePeeker"},
+        {"class": "overflow-auto", "id": "takenImagePeeker"},
     )
 
     # 4. 전송하기
