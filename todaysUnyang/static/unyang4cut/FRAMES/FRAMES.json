@@ -63,11 +63,12 @@
             ]
         },
         {
-            "NAME": "GUNGSEO2",
-            "DISPLAY_NAME": "궁서2",
-            "FILE_NAME": "gungseo2.png",
+            "NAME": "graduation1",
+            "DISPLAY_NAME": "축 졸업1",
+            "FILE_NAME": "graduation1.png",
             "IMAGE": 4,
-            "IS_OVERLAYED": false,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "graduation1_overlay.png",
             "WIDTH": 1000,
             "HEIGHT": 3000,
             "POSITION": [
@@ -196,6 +197,102 @@
             "IMAGE": 4,
             "IS_OVERLAYED": true,
             "OVERLAY_FILE_NAME": "pastel2_overlay.png",
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "PASTEL3",
+            "DISPLAY_NAME": "파스텔3",
+            "FILE_NAME": "pastel3.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "pastel3_overlay.png",
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "pixel1",
+            "DISPLAY_NAME": "픽셀1",
+            "FILE_NAME": "pixel1.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "pixel1_overlay.png",
+            "WIDTH": 1000,
+            "HEIGHT": 3000,
+            "POSITION": [
+                {
+                    "NUM": 1,
+                    "POINT_X": 50,
+                    "POINT_Y": 50
+                },
+                {
+                    "NUM": 2,
+                    "POINT_X": 50,
+                    "POINT_Y": 700
+                },
+                {
+                    "NUM": 3,
+                    "POINT_X": 50,
+                    "POINT_Y": 1350
+                },
+                {
+                    "NUM": 4,
+                    "POINT_X": 50,
+                    "POINT_Y": 2000
+                }
+            ]
+        },
+        {
+            "NAME": "pixel2",
+            "DISPLAY_NAME": "픽셀2",
+            "FILE_NAME": "pixel2.png",
+            "IMAGE": 4,
+            "IS_OVERLAYED": true,
+            "OVERLAY_FILE_NAME": "pixel2_overlay.png",
             "WIDTH": 1000,
             "HEIGHT": 3000,
             "POSITION": [
