@@ -21,7 +21,7 @@ function sizeReload() {
     var rightDivHeight = rightDiv.clientHeight;
 
     // 이미지 피커 div에 높이 적용
-    leftDiv.style.height = rightDivHeight + 'px';
+    leftDiv.style.height = rightDivHeight + 'px';    
 
     var framePeekerWidth = document.getElementById('selectedImageViewer').clientWidth;
     var calculatedMargin = framePeekerWidth * (50 / 1000);

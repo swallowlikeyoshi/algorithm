@@ -23,15 +23,15 @@
 <h1 class="display-3 p-3">운양네컷 꾸미기</h1>
 <div class="unyang4cut d-flex flex-row p-2" style="height: 100%">
     <!-- 이미지 피커 -->
-    <div class="p-1" id="imagePeeker" style="width: 50%; max-height: 100%">
-        <div class="justify-contents" id="box">
-            <div class="card border border-primary" style="margin-bottom: 10px;">
+    <div class="p-1 overflow-scroll scrollRemove" id="imagePeeker" style="width: 50%; max-height: 100%">
+        <div class="justify-content" id="box">
+            <div id="description1" class="card border border-primary" style="margin-bottom: 10px;">
                 <div class="card-body">
                     <h5 class="card-title"><strong>1. 사진 불러오기</strong></h5>
                     <p class="card-text">등록한 이름과 같은 폴더를 선택해주세요.<br>사진이 많거나 처음 불러오는 경우, 시간이 조금 걸릴 수 있어요.</p>
                 </div>
             </div>
-            <p hx-get="/photo/folders" hx-trigger="load">파일 불러오는중...</p>
+            <p hx-get="/photo/folders" hx-trigger="load delay:100ms" hx-swap="outerHTML">파일 불러오는중...</p>
         </div>
     </div>
     <!-- 프레임 프리뷰 -->
