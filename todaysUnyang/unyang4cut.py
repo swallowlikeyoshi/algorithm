@@ -268,6 +268,7 @@ def getAllFrames():
         }
         nameElement = _elementWrapper("p", frame["DISPLAY_NAME"], option)
 
+        # 두 개를 하나로 묶기
         option = {
             "class": "card p-2",
             "style": "width: 45%; margin-right: 10px; min-width: 100px;",
