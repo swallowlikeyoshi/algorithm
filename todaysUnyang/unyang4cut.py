@@ -1,19 +1,13 @@
-from flask import session, render_template, request, Blueprint
-import urllib
-from urllib.parse import unquote
 import os
 import json
-from datetime import datetime
 import sqlite3
-from todaysUnyang import BASE_DIR
+from datetime import datetime
+from urllib.parse import unquote
 
-# from __init__ import BASE_DIR
+from flask import session, render_template, request, Blueprint
+from PIL import Image
 
-# wand 라이브러리는 쓰려면 뭘 또 깔아야함... 젠장
-# from wand.image import Image
-# 차라리 다른 라이브러리를 쓰는게 낫지 https://wikidocs.net/153080
-from PIL import Image, ExifTags
-from todaysUnyang import exif
+from todaysUnyang import BASE_DIR, exif
 
 unyang4cut = Blueprint("photo", __name__, url_prefix="/photo")
 FOLDER_DIR = os.path.join(BASE_DIR, "static", "unyang4cut")
@@ -53,7 +47,6 @@ def registration():
         session["NAME"] = queryParams["NAME"]
         session["PASSWORD"] = queryParams["PASSWORD"]
 
-        # 아래는 변경된 부분입니다.
         if queryParams["TYPE"] == "START":
             session["START_TIME"] = str(datetime.now())
             _shootingLog(
@@ -74,7 +67,6 @@ def registration():
             _shootingLog(
                 session["NAME"], session["PASSWORD"], session["END_TIME"], "END"
             )
-            # print(f'이름: {session["NAME"]}, 종료 시각: {session["END_TIME"]}')
             endedBtnElement = '<div class="p-2 text-center"><div style="width= 50%;"><h3>촬영이 끝났어요.</h3><h5>촬영한 사진은 오늘의 운양고 홈페이지에서 찾을 수 있어요.</h5></div><br><p id="name"></p><p id="startTime"></p><p id="endTime"></p><button id="refreshBtn" class="btn btn-primary" onclick="location.reload()">다음 사진 찍기</button></div>'
             returnElement = {
                 "NAME": session["NAME"],
@@ -82,8 +74,6 @@ def registration():
                 "END_TIME": session["END_TIME"],
                 "NEW_CONTENT": endedBtnElement,
             }
-            # # 세션 초기화
-            # session = dict()
             return json.dumps(returnElement)
 
         elif queryParams["TYPE"] == "IS_DUPLICATED":
@@ -146,6 +136,7 @@ def getAllFiles():
             for folderName in foldersArray:
                 option = {
                     "class": "folderName btn btn-light",
+                    # 이후 동작을 위해선 htmx보단 자바스크립트에서 처리하는게 나을 듯
                     # 'hx-get': f'/photo/images?file_name={urllib.parse.quote(folderName)}',
                     # 'hx-target': '#box',
                     # 'onclick': f'setFolderName({folderName})'
@@ -433,8 +424,6 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
 
     return f"{len(imagesArray)}.jpg"
 
-
-# GPT
 def _imageResize(folderName: str):
     IMAGE_DIR = os.path.join(FOLDER_DIR, folderName)
     RESIZED_DIR = os.path.join(IMAGE_DIR, "RESIZED")
@@ -468,17 +457,13 @@ def _imageResize(folderName: str):
         )
         resizedImage.save(os.path.join(RESIZED_DIR, imageName))
 
-
-# GPT
 def _elementWrapper(tag: str, contents: str, option: dict):
     optstr = " ".join(f'{k}="{v}"' for k, v in option.items())
     return f"<{tag} {optstr}>{contents}</{tag}>"
 
-
 def _inline_elementWrapper(tag: str, option: dict):
     optstr = " ".join(f'{k}="{v}"' for k, v in option.items())
     return f"<{tag} {optstr}/>"
-
 
 def _shootingLog(name: str, password: str, time: datetime, status: str):
     _DB_excute(
@@ -486,7 +471,6 @@ def _shootingLog(name: str, password: str, time: datetime, status: str):
         [name, password, time, status],
     )
     return
-
 
 def _DB_excute(cmd: str, params):
     DB = sqlite3.connect(DB_PATH)
@@ -497,10 +481,8 @@ def _DB_excute(cmd: str, params):
     DB.close()
     return query
 
-
 if __name__ == "__main__":
     # print(_get_all_files())
     # print(_get_all_images())
-    # print(_imageCollage('BLACK', '테스트', ['_1311150.jpg', '_1311150.jpg', '_1311150.jpg', '_1311150.jpg']))
     print(getCollagedImage())
     # _imageResize('테스트')
