@@ -12,8 +12,26 @@ __pycache__
 
 *.pyc
 
-/unyang4cut
-
 *.jpg
 
+*.png
+
 env.py
+
+*.*~*
+
+~*.*
+
+!todaysUnyang/**/unyang4cut/
+
+todaysUnyang/**/unyang4cut/*
+
+!todaysUnyang/**/unyang4cut/FRAMES/
+
+!todaysUnyang/**/FRAMES/*
+
+!todaysUnyang/**/image.jpg
+
+include/
+
+*.cfg

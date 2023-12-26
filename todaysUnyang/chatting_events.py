@@ -27,13 +27,13 @@ class Chat(Namespace):
         session_info = Chat._get_session_info()
         join_room(session_info['room'])
         to_client = {
-            'sent_message': '<' + str(session.get('name')) + '>: 입장'
+            'sent_message': '\t<' + str(session.get('name')) + '>: 입장'
         }
         emit('status', to_client, room = session_info['room'])
 
     def on_text(self, data):
         session_info = Chat._get_session_info()
-        print('<' + str(session_info['name']) + '>: ' + data['message'])
+        print('' + str(session_info['name']) + ': ' + data['message'])
         to_client = {
             'session_name': session_info['name'],
             'session_room': session_info['room'],
@@ -47,6 +47,6 @@ class Chat(Namespace):
         session_info = Chat._get_session_info()
         leave_room(session_info['room'])
         to_client = {
-            'sent_message': '<' + str(session.get('name')) + '> 퇴장'
+            'sent_message': '\t<' + str(session.get('name')) + '> 퇴장'
         }
         emit('status', to_client, room = session_info['room'])
