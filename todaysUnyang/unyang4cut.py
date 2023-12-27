@@ -384,7 +384,9 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
                         os.path.join(FOLDER_DIR, "FRAMES", frame["OVERLAY_FILE_NAME"])
                     ).convert("RGBA")
                 else:
-                    overlayImage = frameImage
+                    overlayImage = Image.open(
+                        os.path.join(FOLDER_DIR, "FRAMES", frame["FILE_NAME"])
+                    ).convert("RGBA")
                 break
         else:
             ValueError(f"{frameName} 프레임을 찾을 수 없습니다.")

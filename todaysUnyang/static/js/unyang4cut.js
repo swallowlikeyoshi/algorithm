@@ -221,7 +221,7 @@ async function setFrame(selectedFrameName) {
     if (frame_info['IS_OVERLAYED']) {
         overlayImageElement.src = FRAMES_BASE_PATH + frame_info['OVERLAY_FILE_NAME']
     } else {
-        overlayImageElement.src = '/static/unyang4cut/FRAMES/clear.png'
+        overlayImageElement.src = FRAMES_BASE_PATH + frame_info['FILE_NAME']
     }
 
     frameModalCloseBtn = document.getElementById('frameModalClose').click()
