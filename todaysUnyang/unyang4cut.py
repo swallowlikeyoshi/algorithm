@@ -98,8 +98,9 @@ def isPasswordCorrect():
             "SELECT DISTINCT password FROM unyang4cutLogs WHERE name = ? ORDER BY time DESC LIMIT 1",
             (postParmas["NAME"],),
         )
-
+        session['CERTIFICATED_FOLDER_NAME'] = []
         if str(queriedUserPassword[0][0]) == str(postParmas["PASSWORD"]):
+            session['CERTIFICATED_FOLDER_NAME'].append(postParmas['NAME'])
             return json.dumps({"IS_TRIUMPH": True, "IS_PASSWORD_CORRECT": True})
         else:
             raise ("비밀번호가 틀립니다.")
@@ -162,6 +163,8 @@ def getAllImages():
 
     # GPT
     try:
+        if reqName not in session['CERTIFICATED_FOLDER_NAME']:
+            raise ValueError(f"폴더 '{reqName}'에 대해 인증되어있지 않습니다.")
         # 1. 같은 이름을 가진 폴더 찾기
         if reqName not in os.listdir(FOLDER_DIR):
             raise ValueError(f"폴더 '{reqName}'을 찾을 수 없습니다.")
@@ -199,7 +202,7 @@ def getAllImages():
         elements = elements + element
 
     # 현재 폴더 표시용 버튼
-    option = {"type": "button", "class": "btn btn-primary", "id": "indicator"}
+    option = {"type": "button disabled", "class": "btn btn-primary", "id": "indicator"}
     indicator = _elementWrapper("button", folderName, option)
 
     # 뒤로가기 버튼
@@ -250,7 +253,7 @@ def getAllFrames():
             overlayFileName = "clear.png"
         # 1. img 태그 이용해서 프레임 이미지 띄우는 요소
         option = {
-            "class": "frameImage p-2",
+            "class": "frameImage p-2 click_block",
             "onclick": "setFrame(this.src, this.alt, this.getAttribute('overlay'))",
             "src": f'{HTML_DIR}/{frame["FILE_NAME"]}',
             "alt": f'{frame["NAME"]}',
@@ -260,8 +263,8 @@ def getAllFrames():
 
         # 2. 이미지 아래 프레임 이름 띄우는 요소
         option = {
-            "class": "frameName p-2",
-            "onclick": "setFrame(this.src, this.alt, this.overlay)",
+            "class": "frameName p-2 click_block",
+            "onclick": "setFrame(this.src, this.alt, this.getAttribute('overlay'))",
             "src": f'{HTML_DIR}/{frame["FILE_NAME"]}',
             "alt": f'{frame["NAME"]}',
             "overlay": f"{HTML_DIR}/{overlayFileName}",
@@ -272,6 +275,8 @@ def getAllFrames():
         option = {
             "class": "card p-2",
             "style": "width: 45%; margin-right: 10px; min-width: 100px;",
+            "onclick": "setFrame(this.getAttribute('alt'))",
+            "alt": f'{frame["NAME"]}'
         }
         element = _elementWrapper("div", imageElement + nameElement, option)
         frameElements.append(element)
@@ -285,10 +290,14 @@ def getAllFrames():
     return finalElement
 
 
-@unyang4cut.route("/collage", methods=["GET"])
+@unyang4cut.route("/collage", methods=["GET", "POST"])
 def getCollagedImage():
-    getJson = request.args.get("json")
-    collage = json.loads(getJson)
+    if request.method == 'GET':
+        getJson = request.args.get("json")
+        collage = json.loads(getJson)
+    elif request.method == 'POST':
+        queryParams = request.json
+        collage = queryParams
 
     # 1. HTML 경로에서 PATH로 바꾸기
     selectedImageInfo = []
@@ -325,8 +334,8 @@ def getCollagedImage():
             "style": "background-color: grey;",
         },
     )
-    modal_footer = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading">닫기</button><a href="#" id="downloadBtn" download><button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button></a><button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>'
-    modal_footer = _elementWrapper("div", modal_footer, {"class": "modal-footer"})
+    modal_footer = '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" hx-get="/photo/closeDownloadModal" hx-target="#collageLoading">닫기</button><button type="button" class="btn btn-primary" onclick="download()">네컷만 저장하기</button><button type="button" class="btn btn-success" onclick="downloadAllFiles()">네컷과 이미지 모두 저장하기</button>'
+    modal_footer = _elementWrapper("div", modal_footer, { "class": "modal-footer" })
     return modal_body + modal_footer
 
 
@@ -419,11 +428,12 @@ def _imageCollage(frameName: str, selectedImageInfo: dict):
     except:
         pass
     imagesArray = os.listdir(FOLDER_DIR + "\\COLLAGED")
+    numOfImage = len(imagesArray) + 1
     # alpha. EXIF 추가하기
         # frameImage.save(f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.png", exif=exif_data)
-    exif.add_exif_and_save(frameImage, f"{FOLDER_DIR}\\COLLAGED\\{len(imagesArray)}.jpg")
+    exif.add_exif_and_save(frameImage, f"{FOLDER_DIR}\\COLLAGED\\{numOfImage}.jpg")
 
-    return f"{len(imagesArray)}.jpg"
+    return f"{numOfImage}.jpg"
 
 def _imageResize(folderName: str):
     IMAGE_DIR = os.path.join(FOLDER_DIR, folderName)

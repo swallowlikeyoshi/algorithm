@@ -1,4 +1,4 @@
-let isFrameFilled = [false, false, false, false]
+let isContainImage = [false, false, false, false]
 let filledImageInfo = [{}, {}, {}, {}]
 let frame = 'WHITE'
 let folderName = ''
@@ -43,21 +43,22 @@ function sizeReload() {
     }
 };
 
-
 function startUp() {
-    takenImageArray = document.querySelectorAll('.takenImages')
-    if (takenImageArray) {
-        for (const takenImage of takenImageArray) {
-            takenImage.classList.remove('hide')
+    // 프레임이 선택되면 클릭을 허용하는 함수
+    console.log('프레임 선택됨.')
+    userImages = document.querySelectorAll('.takenImages')
+    if (userImages) {
+        for (const image of userImages) {
+            image.classList.remove('click_block')
         }
         isFrameSelected = true
     }
 }
 
 async function getFolderList() {
-    const folders = await httpRequest('/photo/folders', 'GET', '', {})
-    var boxElement = document.getElementById('box')
-    replaceContent(folders, boxElement)
+    const folderListElement = await httpRequest('/photo/folders', 'GET', '', {})
+    var imagePeekerElement = document.getElementById('box')
+    replaceContent(folderListElement, imagePeekerElement)
 }
 
 function showFrameInfo(status) {
@@ -87,7 +88,7 @@ async function openFolder(reqFolderName) {
     const isPasswordCorrect = await httpRequest('/photo/password', 'POST', {}, queryParams);
 
     isPasswordCorrectObject = JSON.parse(isPasswordCorrect)
-    console.log(isPasswordCorrect)
+    console.log("폴더 '" + reqFolderName + "'에 대해 인증되었습니다.")
 
     if (isPasswordCorrectObject['IS_TRIUMPH']) {
         if (isPasswordCorrectObject['IS_PASSWORD_CORRECT']) {
@@ -96,6 +97,7 @@ async function openFolder(reqFolderName) {
             queryParams = {
                 'file_name': reqFolderName
             }
+            
             const imagesElement = await httpRequest('/photo/images', 'GET', {}, queryParams)
 
             boxElement = document.getElementById('box')
@@ -116,13 +118,13 @@ async function openFolder(reqFolderName) {
         }
     } else {
         // DB 에러
-        alert('DB 에러입니다. ' + isPasswordCorrectObject['CONTENT'])
+        alert('DB 에러입니다.')
     }
 }
 
 function pushImage(pushedImageSrc, pushedImageName) {
     // 프레임 위의 이미지가 꽉 찼는지 확인
-    imageIdx = isFrameFilled.indexOf(false)
+    imageIdx = isContainImage.indexOf(false)
     if (imageIdx < 0 || imageIdx > 3) {
         return
     }
@@ -131,64 +133,96 @@ function pushImage(pushedImageSrc, pushedImageName) {
         return
     }
 
-    isFrameFilled[imageIdx] = true
+    isContainImage[imageIdx] = true
 
     var image = imageFrameContainer[imageIdx].querySelector('.imageFrame')
     image.src = pushedImageSrc
 
     filledImageInfo[imageIdx] = { url: image.src, fileName: pushedImageName }
 
-    var p = imageFrameContainer[imageIdx].querySelector('.designator')
-    image.classList.remove('disabled')
-    p.classList.add('disabled')
+    image.classList.remove('hide')
 
-    refreshImageList()
+    createBtnAllower()
 }
 
-function refreshImageList() {
-    let collage = {
-        'frame': frame,
-        'folderName': folderName,
-        'images': filledImageInfo
+function createBtnAllower() {
+    if (!isFrameSelected) {
+        return
     }
-    var imageCollage = document.getElementById('imageCollage')
-    imageCollage.value = JSON.stringify(collage)
+
+    var btnElement = document.getElementById('generate')
+
+    for (var bool of isContainImage) {
+        if (!bool) {
+            btnElement.classList.add('disabled')
+            return
+        }
+    }
+    btnElement.classList.remove('disabled')
 }
 
 function popImage(alt) {
     for (var idx = 0; idx < 4; idx++) {
         var image = imageFrameContainer[idx].querySelector('.imageFrame')
-        var p = imageFrameContainer[idx].querySelector('.designator')
         if (image.alt == alt) {
-            image.classList.add('disabled')
+            image.classList.add('hide')
             image.src = '#'
-            p.classList.remove('disabled')
-            isFrameFilled[idx] = false
+            isContainImage[idx] = false
             break
         }
     }
+    createBtnAllower()
 }
 
-function download() {
-    var collagedImage = document.getElementById('collagedImage')
-    collagepushedImageSrc = collagedImage.src
-    var downloadBtn = document.getElementById('downloadBtn')
-    downloadBtn.href = collagedImage.src
+async function create() {
+    collage = {
+        'frame': frame,
+        'folderName': folderName,
+        'images': filledImageInfo
+    }
+
+    var collagedImageElement = await httpRequest('/photo/collage', 'POST', {}, collage)
+
+    var indicatorElement = document.getElementById('collageLoading')
+
+    indicatorElement.innerHTML = collagedImageElement
 }
 
-function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
-    console.log('선택된 프레임: ' + selectedFrameName)
+async function download() {
+    var resultImageElement = document.getElementById('collagedImage')
+    var resultSrc = resultImageElement.src
+    var resultFileName = resultImageElement.alt
+    downloadFile(resultSrc, resultFileName)
+}
+
+async function setFrame(selectedFrameName) {
 
     showFrameInfo(false)
+
+    const FRAMES_BASE_PATH = '/static/unyang4cut/FRAMES/'
+
+    const FRAME_JSON_QUERY = await httpRequest(FRAMES_BASE_PATH + 'FRAMES.json', 'GET', {}, {})
+    const FRAME_JSON = JSON.parse(FRAME_JSON_QUERY)
+    var frame_info = ''
+    for (const FRAME of FRAME_JSON['FRAMES']) {
+        if (FRAME['NAME'] == selectedFrameName) {
+            frame_info = FRAME
+        }
+    }
 
     frame = selectedFrameName
 
     frameImageElement = document.getElementById('backgroundFrameImage')
-    frameImageElement.src = selectedFrameSrc
+    frameImageElement.src = FRAMES_BASE_PATH + frame_info['FILE_NAME']
     frameImageElement.alt = selectedFrameName
 
     overlayImageElement = document.getElementById('overlayFrameImage')
-    overlayImageElement.src = overlayFrameSrc
+
+    if (frame_info['IS_OVERLAYED']) {
+        overlayImageElement.src = FRAMES_BASE_PATH + frame_info['OVERLAY_FILE_NAME']
+    } else {
+        overlayImageElement.src = '/static/unyang4cut/FRAMES/clear.png'
+    }
 
     frameModalCloseBtn = document.getElementById('frameModalClose').click()
 
@@ -197,8 +231,6 @@ function setFrame(selectedFrameSrc, selectedFrameName, overlayFrameSrc) {
     if (!isFrameSelected) {
         startUp()
     }
-
-    refreshImageList()
 }
 
 function downloadFile(url, fileName) {
