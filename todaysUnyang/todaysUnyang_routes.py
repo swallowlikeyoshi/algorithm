@@ -1,13 +1,18 @@
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, send_from_directory
 from datetime import datetime
 from todaysUnyang import mealServiceDietInfo as meal
 from todaysUnyang import 시간표_수정본 as timeTable
 from todaysUnyang import 날씨정보알림 as weather
+from todaysUnyang import BASE_DIR
 
 todaysUnyang = Blueprint('todaysUnyang', __name__)
 
-# HTML 페이지 반환용 함수
+# 특수 기능용 함수
+@todaysUnyang.route('/robots.txt')
+def robots():
+    return send_from_directory(BASE_DIR, request.path[1:])
 
+# HTML 페이지 반환용 함수
 @todaysUnyang.route('/')
 def index():
     return render_template('index.html', diet_info = meal.get_diet_info(_today()), weather_info = weather.get_weather_info())
