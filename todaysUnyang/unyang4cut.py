@@ -45,9 +45,9 @@ def registration():
         queryParams = request.json
 
         session["NAME"] = queryParams["NAME"]
-        session["PASSWORD"] = queryParams["PASSWORD"]
 
         if queryParams["TYPE"] == "START":
+            session["PASSWORD"] = queryParams["PASSWORD"]
             session["START_TIME"] = str(datetime.now())
             _shootingLog(
                 session["NAME"], session["PASSWORD"], session["START_TIME"], "START"
@@ -58,16 +58,18 @@ def registration():
                 pass
 
             # 취소 버튼 엘리먼트를 반환
-            cancelBtnElement = '<div id="terminate" class="p-2 d-flex flex-column justify-content-around"><h3>사진 촬영을 끝마친 후 버튼을 눌러주세요.</h3><button class="btn btn-danger" onclick="stop()">그만 찍기</button></div>'
-            returnElement = {"NEW_CONTENT": cancelBtnElement}
+            # cancelBtnElement = '<div id="terminate" class="p-2 d-flex flex-column justify-content-around text-center"><h3>사진 촬영을 끝마친 후 버튼을 눌러주세요.</h3><button class="btn btn-danger" onclick="stop()">그만 찍기</button></div>'
+            endedBtnElement = '<div class="card text-center mb-3 p-2" style="width: 100%;"><div class="card-body"><h5 class="card-title">등록되었습니다.</h5><h6 class="card-subtitle mb-2 text-body-secondary">사진을 찍고 이 화면을 보여주세요.</h6><p class="card-text" id="userName"></p><a href="/photo" class="btn btn-primary">꾸미러 가기</a></div></div>'
+            returnElement = {"NEW_CONTENT": endedBtnElement}
             return json.dumps(returnElement)
 
         elif queryParams["TYPE"] == "END":
+            session["PASSWORD"] = queryParams["PASSWORD"]
             session["END_TIME"] = str(datetime.now())
             _shootingLog(
                 session["NAME"], session["PASSWORD"], session["END_TIME"], "END"
             )
-            endedBtnElement = '<div class="p-2 text-center"><div style="width= 50%;"><h3>촬영이 끝났어요.</h3><h5>촬영한 사진은 오늘의 운양고 홈페이지에서 찾을 수 있어요.</h5></div><br><p id="name"></p><p id="startTime"></p><p id="endTime"></p><button id="refreshBtn" class="btn btn-primary" onclick="location.reload()">다음 사진 찍기</button></div>'
+            endedBtnElement = '<div class="card text-center mb-3" style="width: 18rem;"><div class="card-body"><h5 class="card-title">등록되었습니다.</h5><h6 class="card-subtitle mb-2 text-body-secondary">사진을 찍고 이 화면을 보여주세요.</h6><p class="card-text" id="userName"></p><a href="/photo" class="btn btn-primary">꾸미러 가기</a></div></div>'
             returnElement = {
                 "NAME": session["NAME"],
                 "START_TIME": session["START_TIME"],
@@ -129,7 +131,7 @@ def getAllFiles():
         ]
 
         # 2. HTML화 하기
-        if not foldersArray:
+        if len(foldersArray) <= 0:
             option = {"class": "emptyFolder btn btn-light"}
             ValueError(_elementWrapper("p", "폴더가 없어요.<br>나중에 다시 시도해 주세요.", option))
         else:

@@ -6,20 +6,58 @@
         min-height: 100vh;
     }
 </style>
-<div id="unyang4cut_registration" class="p-2 d-flex justify-content-center text-center flex-column">
-    <h1>운양네컷 찍기</h1><br>
-    <p>주의: 운양네컷은 컴퓨터실에서만 찍을 수 있습니다!</p>
+
+<div id="unyang4cut_registration" class="p-2 d-flex justify-content-center flex-column">
+    <h1 class="text-center">운양네컷 찍기</h1>
     <div class="p-2" style="width: 100%;">
-        <div id="infoForm">
-            <div class="form-floating mb-3">
-                <input type="name" class="form-control" id="name" name="name" placeholder="이름 혹은 학번">
-                <label for="floatingInput">이름 혹은 학번</label>
+        <div id="registration">
+            <div class="mb-3">
+                <label for="inputName" class="form-label">이름</label>
+                <input type="text" class="form-control" id="inputName">
             </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
-                <label for="floatingPassword">비밀번호</label>
+            <div class="mb-3">
+                <label for="inputPassword" class="form-label">비밀번호</label>
+                <input type="password" class="form-control" id="inputPassword" aria-describedby="passwordHelp">
+                <div id="passwordHelp" class="form-text">다른 곳에서 사용하지 않는 간단한 비밀번호를 입력해주세요.</div>
             </div>
-            <button class="btn btn-success" style="margin-top: 10px;" onclick="start()">촬영 시작하기!</button>
+            <div class="text-center"><button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#notice">
+                    등록하기
+                    <!-- </button><button type="submit" class="btn btn-primary">등록하기</button> --></div>
+            <div class="modal fade" id="notice" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">운양네컷을 찍기 전에 꼭 읽어주세요!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card text-bg-warning mb-3 p-2">
+                                <ul class="list-unstyled">
+                                    <style>
+                                        li {
+                                            margin-bottom: 5px;
+                                        }
+                                    </style>
+                                    <li>1. 촬영은 <strong>총 6장, 3초 간격</strong>으로 진행됩니다.</li>
+                                    <li>2. 인원이 적다면 <strong>카메라 가까이 붙어주세요</strong>. 조명에 가까울수록 인물이 밝아집니다.</li>
+                                    <li>3. 촬영 후에는 '오늘의 운양고' 웹사이트에서 사진을 꾸밀 수 있습니다. 사이트는 QR코드를 참고해주세요.</li>
+                                    <ul>
+                                        <li>'오늘의 운양고'는 <strong>학교 와이파이를 통해서만 들어갈 수 있습니다.</strong></li>
+                                        <li>학교 와이파이는 QR코드를 참고해주세요.</li>
+                                    </ul>
+                                    <li>4. 촬영 후 사진이 바로 업로드 되지 않을 수 있어요. 조금만 기다려주세요.</li>
+                                    <li>5. 꾸밀 때 오류가 발생하면 동아리 부원에게 말해주세요.</li>
+                                </ul>
+                            </div class="">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="notice-modal-close" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button type="submit" class="btn btn-primary" onclick="onSubmitForm()">찍기 시작하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
