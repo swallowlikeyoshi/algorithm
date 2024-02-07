@@ -1,0 +1,1 @@
+special_message = '테스트'

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- 서버 아이피 확정 시 수정되어야 함 -->
+<div class="d-flex justify-content-center" style="min-height: 500px;">
+    <div class="d-flex d-flex flex-column justify-content-center" style="max-width: 600px;">
+        <h1>오늘의 운양고</h1>
+        <form action="http://localhost/chat/" method="POST">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">이름</span>
+                <input name="name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <button class="btn btn-primary" type="submit">들어가기</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

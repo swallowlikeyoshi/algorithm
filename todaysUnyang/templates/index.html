@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 align-items-center my-5">
+        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="{{ url_for('static', filename='image.jpg') }}" alt="beluga" /></div>
+        <div class="col-lg-5">
+            <h1 class="font-weight-light">환영합니다!</h1>
+            <p>본 사이트는 2023 알고리즘 동아리에서 제작되었습니다.</p>
+            <a class="btn btn-primary" href="{{ url_for('todaysUnyang.developers')}}">제작자 보러가기</a>
+        </div>
+    </div>
+</div>
+<div class="container align-items-center text-center">
+    <div class="row gx-4 gx-lg-5">
+        <div class="col-md-4 mb-5">
+            <div class="card h-100 border border-success">
+                <div class="card-body">
+                    <h2 class="card-title">운양네컷 꾸미기</h2>
+                    <p class="card-text">컴퓨터실에서 운양네컷을 찍고 꾸며보세요!</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-success btn-sm" href="/photo">꾸미러 가기</a></div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 급식 메뉴</h2>
+                    <p class="card-text text-center">{{ diet_info | safe }}</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 날씨</h2>
+                    <p class="card-text">{{ weather_info | safe }}</p>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">오늘의 시간표</h2>
+                    <div class="text-center">
+                        <p class="card-text" id="timeTable">시간표</p>
+                        <div class="containber row">
+                            <form hx-post="/_timetable" hx-trigger="submit" hx-target="#timeTable">
+                                학년: <input type="text" name="grade"><br>
+                                반: <input type="text" name="class"><br>
+                                학기: <input type="text" name="semester"><br>
+                                <button type="submit">불러오기</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">더 보기</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
